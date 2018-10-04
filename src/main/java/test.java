@@ -1,10 +1,13 @@
+import javafx.util.Pair;
 
+import java.util.List;
 
 public class test {
-    public static void main(String [] args){
+    public static <listing> void main(String [] args){
         Request request = new Request();
-        String s = request.addNewUser("Alik7896", "Alik7896","Kazakhstan","Astana","Alik7896@mail.ru","8 777 665 9090","inho placeholder");
+       // String s = request.addNewUser_name_and_password_only("Jony112", "Jony112");
+        Pair<Boolean,String> y = request.checkNameAndPassword("Jony113","Jony113");
+        System.out.println(y);
 
-        System.out.println(s);
     }
 }
