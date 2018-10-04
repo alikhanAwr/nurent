@@ -1,16 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Log In</title>
+
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/lodash.min.js"></script>
+
+    <script type="text/javascript">
+        function isValidEmail(email) {
+            return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test( email );
+        }
+
+        
+        function login() {
+            var email = $("#loginEmail").val();
+            var psw = $("#loginPassword").val();
+
+            if (isValidEmail(email)) {
+                console.log("email")
+                $.ajax({
+                    url : 'login/signin',
+                    dataType : 'text',
+                    method : 'POST',
+                    success : function (r) {
+                        var item = r;
+                        console.log(item);
+                    }
+                })
+            } else {
+                console.log("not email");
+            }
+        }
+
+        function singUp() {
+            var email = $("#signUpEmail").val();
+            var psw = $("#signUpPassword").val();
+
+            if (isValidEmail(email)) {
+                console.log("email")
+                $.ajax({
+                    url : 'login/signup',
+                    dataType : 'text',
+                    method : 'POST',
+                    success : function (r) {
+                        var item = r;
+                        console.log(item);
+                    }
+                })
+            } else {
+                console.log("not email");
+            }
+        }
+
+
+        $(document).ready(function () {
+            $("#loginButton").on('click', function() {
+                login();
+            });
+
+            $("#signUpButton").on('click', function() {
+                singUp();
+            });
+            
+        });
+
+    </script>
+
 </head>
 <body>
 
 <div>
     <h1>Log In</h1>
 
+    <fieldset>
+        <legend>Sign in</legend>
+
+        <div>
+            <label for="loginEmail">email:</label>
+            <input type="email" id="loginEmail" name="loginEmail" required />
+        </div>
+
+        <div>
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" name="loginPassword" minlength="5" required/>
+        </div>
+
+        <input type="submit" id="loginButton" value="Sign in">
+    </fieldset>
 
     <h1>Sign Up</h1>
+
+    <fieldset>
+        <legend>Sign Up</legend>
+
+        <div>
+            <label for="signUpEmail">email:</label>
+            <input type="email" id="signUpEmail" name="signUpEmail" required />
+        </div>
+
+        <div>
+            <label for="signUpPassword">Password:</label>
+            <input type="password" id="signUpPassword" name="signUpPassword" minlength="5" required/>
+        </div>
+
+        <input type="submit" id="signUpButton" value="Sign up">
+    </fieldset>
+
 
 </div>
 

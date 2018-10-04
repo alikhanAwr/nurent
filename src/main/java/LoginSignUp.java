@@ -19,15 +19,33 @@ public class LoginSignUp {
     @Context
     private ServletContext context;
 
-    private List<String> list = new CopyOnWriteArrayList<String>();
-
+    private Request request;
 
     @GET
     @Produces({MediaType.TEXT_HTML})
     public InputStream getMyList() throws FileNotFoundException {
-        File f = new File(context.getRealPath("login.html"));
-        return new FileInputStream(f);
+        return context.getResourceAsStream("login.html");
     }
+
+    @POST
+    @Path("signin")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response login(Credentials credentials) {
+        String username = credentials.getUsername();
+        String password = credentials.getPassword();
+
+
+
+
+    }
+
+    @POST
+    @Path("signup")
+    public String signUp() {
+        return "signed up";
+    }
+
 
 
 
