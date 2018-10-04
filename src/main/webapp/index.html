@@ -6,52 +6,27 @@
 <script src="scripts/jquery.min.js"></script>
 <script src="scripts/lodash.min.js"></script>
 
-<!--<script type="text/javascript">-->
-<!--items = [];-->
-<!--function updateList() {-->
-    <!--$("#my-list").html("");-->
-    <!--items.forEach(function (e) {-->
-        <!--$("#my-list").append("<li>" + e + "</li>");-->
-    <!--});-->
-<!--}-->
+<script type="text/javascript">
 
-<!--function getListItems() {-->
-    <!--$.ajax({-->
-        <!--url : 'services/items',-->
-        <!--dataType : 'json',-->
-        <!--success : function(r) {-->
-            <!--items = r.list;-->
-            <!--$("#next-url").html(r.next);-->
-            <!--$("#prev-url").html(r.prev);-->
-            <!--updateList();-->
-        <!--}-->
-    <!--});-->
-<!--}-->
+    function checkHeader() {
+        var email = sessionStorage.getItem("email");
+        if (email != null) {
+            $('#header').empty();
+            $('#header').append("<a href='nurent/profile'>profile:" + email + "</a>");
+        }
+    }
 
-<!--function sendListItem() {-->
-    <!--var s = $("#texttosend").val();-->
-    <!---->
-    <!--$.post("todo", { texttosend: s}, function() {-->
-        <!--getListItems();-->
-    <!--});-->
-<!--}-->
+$(document).ready(function () {
+    checkHeader();
 
-<!--$(document).ready(function () { -->
-    <!--$("#my-list").append("<li>test");-->
-    <!--getListItems();-->
-    <!---->
-    <!--$("#send-item").on('click', function () {-->
-        <!--sendListItem();-->
-    <!--});-->
-<!--});-->
-<!--</script>-->
+});
+
+</script>
 </head>
 <body>
 <h2>Nu Rent</h2>
-<a href="nurent/login">log in / sign up</a>
-
-
-
-
+<div id="header">
+    <a href="nurent/login">log in / sign up</a>
+</div>
 </body>
 </html>
