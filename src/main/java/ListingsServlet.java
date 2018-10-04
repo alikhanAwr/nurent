@@ -18,6 +18,6 @@ public class ListingsServlet {
 
     @GET
     public Response getListings() {
-
+        return Response.ok().build();
     }
 }
