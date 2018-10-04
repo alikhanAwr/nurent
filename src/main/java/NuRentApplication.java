@@ -12,7 +12,7 @@ public class NuRentApplication extends Application {
     
     public NuRentApplication() {
         singletons.add(new LoginSignUp());
-       // singletons.add(new ListingsServlet());
+        singletons.add(new ListingsServlet());
     }
     
     @Override
