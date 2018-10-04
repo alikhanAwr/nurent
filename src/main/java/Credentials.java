@@ -2,19 +2,16 @@ import com.google.gson.Gson;
 import java.io.Serializable;
 
 public class Credentials implements Serializable {
-    private String username;
+    private String email;
+    private String password;
 
-    public Credentials(String username, String password) {
-        this.username = username;
-        this.password = password;
+
+    public String getEmail() {
+        return email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -25,7 +22,6 @@ public class Credentials implements Serializable {
         this.password = password;
     }
 
-    private String password;
 
 
 }

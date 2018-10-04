@@ -12,44 +12,72 @@
             return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test( email );
         }
 
+        function putLoginInfo(email) {
+            sessionStorage.setItem("email", email);
+        }
         
         function login() {
             var email = $("#loginEmail").val();
-            var psw = $("#loginPassword").val();
-
             if (isValidEmail(email)) {
-                console.log("email")
+                var credentials = {
+                    email: email,
+                    password: $("#loginPassword").val()
+                }
+
                 $.ajax({
                     url : 'login/signin',
-                    dataType : 'text',
+                    contentType : 'application/json',
+                    dataType: 'json',
                     method : 'POST',
+                    statusCode : {
+                        401: function (r) {
+                            var message = r.responseJSON.message;
+                            console.log(r);
+                            $('#loginIncorrect').empty();
+                            $('#loginIncorrect').append("<p>"+ message + "</p>");
+                        }
+                    },
                     success : function (r) {
-                        var item = r;
-                        console.log(item);
-                    }
-                })
+                        putLoginInfo(email);
+                        window.location.replace("/");
+                    },
+                    data: JSON.stringify(credentials)
+                });
             } else {
-                console.log("not email");
+                $('#loginIncorrect').empty();
+                $('#loginIncorrect').append("<p>Incorrect email!</p>");
             }
         }
 
         function singUp() {
             var email = $("#signUpEmail").val();
-            var psw = $("#signUpPassword").val();
-
             if (isValidEmail(email)) {
-                console.log("email")
+                var credentials = {
+                    email: email,
+                    password: $("#signUpPassword").val()
+                }
                 $.ajax({
                     url : 'login/signup',
-                    dataType : 'text',
+                    contentType : 'application/json',
+                    dataType: 'json',
                     method : 'POST',
+                    statusCode : {
+                        401: function (r) {
+                            var message = r.responseJSON.message;
+                            console.log(r);
+                            $('#signUpIncorrect').empty();
+                            $('#signUpIncorrect').append("<p>"+ message + "</p>");
+                        }
+                    },
                     success : function (r) {
-                        var item = r;
-                        console.log(item);
-                    }
-                })
+                        putLoginInfo(email);
+                        window.location.replace("/");
+                    },
+                    data: JSON.stringify(credentials)
+                });
             } else {
-                console.log("not email");
+                $('#signUpIncorrect').empty();
+                $('#signUpIncorrect').append("<p>Incorrect email!</p>");
             }
         }
 
@@ -76,6 +104,8 @@
     <fieldset>
         <legend>Sign in</legend>
 
+        <div id="loginIncorrect"></div>
+
         <div>
             <label for="loginEmail">email:</label>
             <input type="email" id="loginEmail" name="loginEmail" required />
@@ -93,6 +123,8 @@
 
     <fieldset>
         <legend>Sign Up</legend>
+
+        <div id="signUpIncorrect"></div>
 
         <div>
             <label for="signUpEmail">email:</label>
