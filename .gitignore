@@ -3,3 +3,6 @@ target/
 .project
 .classpath
 .DS_Store
+.idea/
+rent_listings.iml
+
