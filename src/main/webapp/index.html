@@ -6,27 +6,89 @@
 <script src="scripts/jquery.min.js"></script>
 <script src="scripts/lodash.min.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    function checkHeader() {
-        var email = sessionStorage.getItem("email");
-        if (email != null) {
-            $('#header').empty();
-            $('#header').append("<a href='nurent/profile'>profile:" + email + "</a>");
+        function checkHeader() {
+            var email = sessionStorage.getItem("email");
+            if (email != null) {
+                $('#header').empty();
+                $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + email + "</button></a>");
+            }
         }
-    }
 
-$(document).ready(function () {
-    checkHeader();
+    $(document).ready(function () {
+        checkHeader();
 
-});
+    });
 
-</script>
+    </script>
+
+    <style>
+        h1 { color: #1b7db4;
+            font-family: 'Droid serif', serif;
+            font-size: 36px;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 44px;
+            margin: 0 0 12px;
+            text-align: center;
+        }
+
+        #header {
+            float: right;
+
+        }
+
+        #loginButton {
+            border: 0;
+            cursor: pointer;
+            display: block;
+            font-weight: 600;
+            padding: 5px 9px;
+            text-transform: inherit;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto;
+            font-size: 14px;
+            line-height: 18px;
+            background: #c1cad3 0 0;
+            border: 1px solid #c1cad8;
+            border-radius: 4px;
+            color: #000000;
+            position: relative;
+        }
+
+        #profileButton {
+            border: 0;
+            cursor: pointer;
+            display: block;
+            font-weight: 600;
+            padding: 5px 9px;
+            text-transform: inherit;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: auto;
+            font-size: 14px;
+            line-height: 18px;
+            background: #c1cad3 0 0;
+            border: 1px solid #c1cad8;
+            border-radius: 4px;
+            color: #000000;
+            position: relative;
+        }
+
+
+    </style>
+
+
+
 </head>
 <body>
-<h2>Nu Rent</h2>
-<div id="header">
-    <a href="nurent/login">log in / sign up</a>
-</div>
+    <div id="header">
+        <a href="nurent/login" style="text-decoration:none;" ><button id="loginButton">log in / sign up</button></a>
+    </div>
+
+    <h1>Nu Rent</h1>
+
 </body>
 </html>
