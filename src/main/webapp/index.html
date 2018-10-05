@@ -16,8 +16,20 @@
           }
       }
 
+    function getListings() {
+        $.ajax({
+           url : '/listings',
+            dataType: 'json',
+            method : 'GET',
+            success : function(r) {
+               console.log(r)
+            }
+        });
+    }
+
     $(document).ready(function () {
         checkHeader();
+        getListings();
 
     });
 
@@ -89,6 +101,9 @@
     </div>
 
     <h1>Nu Rent</h1>
+    <div id="listings">
+
+    </div>
 
 </body>
 </html>
