@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.util.Pair;
 
 @Path("/login")
@@ -37,8 +38,8 @@ public class LoginSignUp {
         String email = credentials.getEmail();
         String password = credentials.getPassword();
 
-//        Pair<Boolean, String> result = request.checkNameAndPassword(email, password);
-        Pair<Boolean, String> result = new Pair<>(false, "Incorrect name or password");
+        Pair<Boolean, String> result = request.checkNameAndPassword(email, password);
+//        Pair<Boolean, String> result = new Pair<>(false, "Incorrect name or password");
         LoginResponse r = new LoginResponse(result.getKey(), result.getValue());
         Gson gson = new Gson();
         String json = gson.toJson(r, LoginResponse.class);
@@ -58,8 +59,8 @@ public class LoginSignUp {
         String email = credentials.getEmail();
         String password = credentials.getPassword();
 
-//        Pair<Boolean, String> result = request.addNewUser_name_and_password_only(email, password);
-        Pair<Boolean, String> result = new Pair<>(true, "New User was added Successfully");
+        Pair<Boolean, String> result = request.addNewUser_name_and_password_only(email, password);
+//        Pair<Boolean, String> result = new Pair<>(true, "NewUser added Successfully");
         LoginResponse r = new LoginResponse(result.getKey(), result.getValue());
         Gson gson = new Gson();
         String json = gson.toJson(r, LoginResponse.class);

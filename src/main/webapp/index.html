@@ -8,6 +8,8 @@
 
     <script type="text/javascript">
 
+        listings = [];
+
     function checkHeader() {
           var email = sessionStorage.getItem("email");
           if (email != null) {
@@ -28,17 +30,33 @@
             dataType: 'json',
             method : 'GET',
             success : function(r) {
-               for (var listing in r) {
-                   if (r.hasOwnProperty(listing)) {
-                       title = listing[title];
-                       $('#listings').empty();
-                       $('#header').append("<h3>" + title + "</h3>");
-                   }
 
-               }
+                       listings = r;
+                       updateList();
+
+
+
             }
         });
     }
+
+    function updateList() {
+        $("#listings-list").empty();
+
+
+            for (var i in listings) {
+
+                console.log(listings[i].title);
+                $("#listings-list").append("<li>" + listings[i].title + ", Price: " + listings[i].price + ", Address: " + listings[i].address + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description);
+
+                $("#listings-list").append("</li>");
+
+            }
+
+
+
+    }
+
 
     $(document).ready(function () {
         checkHeader();
@@ -115,7 +133,7 @@
 
     <h1>Nu Rent</h1>
     <div id="listings">
-
+        <ul id="listings-list"> </ul>>
     </div>
 
 </body>

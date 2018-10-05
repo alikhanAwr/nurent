@@ -115,6 +115,7 @@ class Request {
     }
 
     public List<Listing> getAllListings(){
+        System.out.println("2");
         List<Listing> list = new LinkedList();
         connector cnnt = new connector();
         try {

@@ -23,9 +23,13 @@ public class ListingsServlet {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getMyList() {
+        System.out.println("l1");
         List<Listing> listings = request.getAllListings();
+        System.out.println("l2");
         Gson gson = new Gson();
+        System.out.println("l3");
         String json = gson.toJson(listings);
+        System.out.println("l4");
         System.out.println(json);
         return Response.ok(json).build();
     }
