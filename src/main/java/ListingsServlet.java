@@ -15,9 +15,18 @@ import com.google.gson.Gson;
 
 @Path("/listings")
 public class ListingsServlet {
+    @Context
+    private ServletContext context;
+
+    private Request request = new Request();
 
     @GET
-    public Response getListings() {
-        return Response.ok().build();
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getMyList() {
+        List<Listing> listings = request.getAllListings();
+        Gson gson = new Gson();
+        String json = gson.toJson(listings);
+        System.out.println(json);
+        return Response.ok(json).build();
     }
 }
