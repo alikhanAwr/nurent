@@ -17,12 +17,25 @@
       }
 
     function getListings() {
+        var title;
+        var description;
+        var price;
+        var address;
+        var postdate;
+        var username;
         $.ajax({
-           url : '/listings',
+           url : 'nurent/listings',
             dataType: 'json',
             method : 'GET',
             success : function(r) {
-               console.log(r)
+               for (var listing in r) {
+                   if (r.hasOwnProperty(listing)) {
+                       title = listing[title];
+                       $('#listings').empty();
+                       $('#header').append("<h3>" + title + "</h3>");
+                   }
+
+               }
             }
         });
     }
