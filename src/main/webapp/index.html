@@ -8,13 +8,13 @@
 
     <script type="text/javascript">
 
-        function checkHeader() {
-            var email = sessionStorage.getItem("email");
-            if (email != null) {
-                $('#header').empty();
-                $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + email + "</button></a>");
-            }
-        }
+    function checkHeader() {
+          var email = sessionStorage.getItem("email");
+          if (email != null) {
+              $('#header').empty();
+              $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + email + "</button></a>");
+          }
+      }
 
     $(document).ready(function () {
         checkHeader();
