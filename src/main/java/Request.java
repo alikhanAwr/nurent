@@ -58,7 +58,7 @@ class Request {
                 toReturn = "User with such name already exists";
                 return "User with such name already exists";
             }
-            query1 = "SELECT * FROM Accounts WHERE email = \"" + email +"\";";
+            query1 = "SELECT * FROM Accounts WHERE name = \"" + email +"\";";
             rs = st.executeQuery(query1);
             if(rs.next()){
                 System.out.println("User with such email already exists");
@@ -72,7 +72,7 @@ class Request {
                 toReturn = "User with such phone number already exists";
                 return "User with such phone number already exists";
             }
-            query1 = "INSERT INTO Accounts(name, password, country, city, email, phone, info) " +
+            query1 = "INSERT INTO Accounts(name, password, country, city, name, phone, info) " +
                     "VALUES(\""+name+"\",\""+generateHash(password)+"\",\""+country+"\",\""+city+"\",\""+email+"\",\""+phone+"\",\""+info+"\");";
             st.executeUpdate(query1);
             System.out.println("NewUser Added Successfully");
@@ -124,13 +124,107 @@ class Request {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             while(rs.next()) {
-               Listing listing = new Listing(rs.getString("username"),
+               Listing listing = new Listing(rs.getString("email"),
                                             rs.getString("title"),
+                                            rs.getString("city"),
+                                            rs.getString("building"),
+                                            rs.getInt("num_of_rooms"),
                                             rs.getString("description"),
                                             rs.getInt("price"),
-                                            rs.getString("address"),
-                                            rs.getString("postdate"));
+                                            rs.getString("postdate"),
+                                            rs.getString("contact_info"));
                ((LinkedList<Listing>) list).addLast(listing);
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in getAllListings: "+ex.getMessage());
+        } finally {
+            return list;
+        }
+    }
+
+    //possible sort_types: by_num_of_rooms , by_city_name , by_price ; posiible sort_order: asc , desc (or)  ASC , DESC ; if sort_order == null -> asc will be used
+    public List<Listing> getListingsByParameters(String city, String minprice, String maxprice, String min_num_of_rooms, String max_num_of_rooms, String sort_by, String order_by){
+        System.out.println("3");
+        boolean and = false;
+        List<Listing> list = new LinkedList();
+        connector cnnt = new connector();
+        try {
+            String query1 = "SELECT * FROM Listings";
+            if(city!=null||minprice!=null||maxprice!=null||min_num_of_rooms!=null||max_num_of_rooms!=null){
+                query1 += " WHERE";
+            }
+            if(city!=null){
+                and = true;
+                query1 += " city = '"+city+"'";
+            }
+            if(minprice!=null){
+                if(and){
+                    query1 += " AND";
+                }
+                and = true;
+                query1 += " price >= "+minprice+"";
+            }
+            if(maxprice!=null){
+                if(and){
+                    query1 += " AND";
+                }
+                and = true;
+                query1 += " price <= "+maxprice+"";
+            }
+            if(min_num_of_rooms!=null){
+                if(and){
+                    query1 += " AND";
+                }
+                and = true;
+                query1 += " num_of_rooms >= "+min_num_of_rooms+"";
+            }
+            if(max_num_of_rooms!=null){
+                if(and){
+                    query1 += " AND";
+                }
+                and = true;
+                query1 += " num_of_rooms <= "+max_num_of_rooms+"";
+            }
+            if(sort_by!=null){
+                if(sort_by.equals("by_num_of_rooms")){
+                    if(order_by == null || order_by.equals("asc") || order_by.equals("ASC")){
+                        query1 += " ORDER BY num_of_rooms ASC";
+                    }else if(order_by.equals("desc") || order_by.equals("DESC")){
+                        query1 += " ORDER BY num_of_rooms DESC";
+                    }
+                }
+                if(sort_by.equals("by_city_name")){
+                    if(order_by == null || order_by.equals("asc") || order_by.equals("ASC")){
+                        query1 += " ORDER BY city ASC";
+                    }else if(order_by.equals("desc") || order_by.equals("DESC")){
+                        query1 += " ORDER BY city DESC";
+                    }
+                }
+                if(sort_by.equals("by_price")) {
+                    if (order_by == null || order_by.equals("asc") || order_by.equals("ASC")) {
+                        query1 += " ORDER BY price ASC";
+                    } else if (order_by.equals("desc") || order_by.equals("DESC")) {
+                        query1 += " ORDER BY price DESC";
+                    }
+                }
+            }
+
+            query1 += ";";
+            System.out.println(query1);
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            while(rs.next()) {
+                Listing listing = new Listing(rs.getString("email"),
+                        rs.getString("title"),
+                        rs.getString("city"),
+                        rs.getString("building"),
+                        rs.getInt("num_of_rooms"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getString("postdate"),
+                        rs.getString("contact_info"));
+                ((LinkedList<Listing>) list).addLast(listing);
             }
         } catch (Exception ex) {
             System.out.println("Exception in getAllListings: "+ex.getMessage());
