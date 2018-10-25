@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -65,14 +67,23 @@ class Request {
     }
 
     public void deleteToken(String token_to_delete){
-
+        connector cnnt = new connector();
+        String toReturn = null;
+        try {
+            String query1 = "UPDATE Accounts SET token = NULL WHERE token = '"+token_to_delete+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            st.executeUpdate(query1);
+        } catch (Exception ex) {
+            System.out.println("Exception in generateToken(): "+ex.getMessage());
+        }
     }
 
     public void addNewUser(String email, String password, String name, String surname, String phone) throws Exception{
         connector cnnt = new connector();
         String toReturn = null;
         try {
-            String query1 = "SELECT * FROM Accounts WHERE email = \"" + email +"\";";
+            String query1 = "SELECT * FROM Accounts WHERE email = \""+ email +"\";";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
@@ -94,10 +105,25 @@ class Request {
         }
     }
 
-    public Pair<Boolean,String> addListing(String email, String title , String city , String building , String num_of_rooms , String description , String price , String contact_info){
-
-
-        return null;
+    public void addListing( String title , String city , String building , String num_of_rooms , String description , String price , String contact_info, String token){
+        connector cnnt = new connector();
+        String toReturn = null;
+        String email = "";
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+        try {
+            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                email = rs.getString("email");
+            }
+            query1 = "INSERT INTO Listings(email, title, city, building, num_of_rooms, description, price, postdate) " +
+                    "VALUES('"+email+"','"+title+"','"+city+"','"+building+"',"+num_of_rooms+",'"+description+"',"+price+",'"+contact_info+"';";
+            st.executeUpdate(query1);
+        } catch (Exception ex) {
+            System.out.println("Exception in addListing() "+ex.getMessage());
+        }
     }
 
 
@@ -227,12 +253,43 @@ class Request {
                     }
                 }
             }
-
             query1 += ";";
             System.out.println(query1);
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
+            while(rs.next()) {
+                Listing listing = new Listing(rs.getString("email"),
+                        rs.getString("title"),
+                        rs.getString("city"),
+                        rs.getString("building"),
+                        rs.getInt("num_of_rooms"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getString("postdate"),
+                        rs.getString("contact_info"));
+                ((LinkedList<Listing>) list).addLast(listing);
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in getAllListings: "+ex.getMessage());
+        } finally {
+            return list;
+        }
+    }
+
+    public List<Listing> getListingsForUser(String token){
+        List<Listing> list = new LinkedList();
+        connector cnnt = new connector();
+        String email = "";
+        try {
+            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                email = rs.getString("email");
+            }
+            rs = st.executeQuery(query1);
             while(rs.next()) {
                 Listing listing = new Listing(rs.getString("email"),
                         rs.getString("title"),
