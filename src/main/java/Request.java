@@ -49,13 +49,12 @@ class Request {
         connector cnnt = new connector();
         String toReturn = null;
         try {
-
             String query1 = "UPDATE Accounts SET token = '"+uuid+"' WHERE email = '"+email+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
         } catch (Exception ex) {
-            System.out.println("Exception in addNewUser: "+ex.getMessage());
+            System.out.println("Exception in generateToken(): "+ex.getMessage());
         } finally {
             return uuid;
         }
