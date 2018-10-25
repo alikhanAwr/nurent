@@ -45,7 +45,7 @@ public class ListingsServlet {
         String json = gson.toJson(listings);
         System.out.println("l4");
         System.out.println(json);
-        return Response.ok(json).build();
+        return Response.ok(json).build();//123
     }
 
 }
