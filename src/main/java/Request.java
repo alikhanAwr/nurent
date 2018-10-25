@@ -12,7 +12,8 @@ import java.util.List;
 
 class Request {
 
-
+    //only for minimal-viable demonstration
+    @Deprecated
     public Pair<Boolean,String> addNewUser_name_and_password_only(String name, String password){
         connector cnnt = new connector();
         String toReturn = null;
@@ -41,48 +42,46 @@ class Request {
             return ret;
         }
     }
-    //only for minimal-viable demonstration
 
-    public String addNewUser(String name, String password, String country, String city, String email, String phone, String info) {
 
+    public Pair<Boolean,String> addNewUser(String email, String password, String name, String surname, String phone){
         connector cnnt = new connector();
         String toReturn = null;
         try {
-
-            String query1 = "SELECT * FROM Accounts WHERE name = \"" + name +"\";";
+            String query1 = "SELECT * FROM Accounts WHERE email = \"" + email +"\";";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
-                System.out.println("User with such name already exists");
-                toReturn = "User with such name already exists";
-                return "User with such name already exists";
-            }
-            query1 = "SELECT * FROM Accounts WHERE name = \"" + email +"\";";
-            rs = st.executeQuery(query1);
-            if(rs.next()){
                 System.out.println("User with such email already exists");
                 toReturn = "User with such email already exists";
-                return "User with such email already exists";
+                return new Pair<Boolean, String>(false,"User with such email already exists");
             }
             query1 = "SELECT * FROM Accounts WHERE phone = \"" + phone +"\";";
             rs = st.executeQuery(query1);
             if(rs.next()){
                 System.out.println("User with such phone number already exists");
                 toReturn = "User with such phone number already exists";
-                return "User with such phone number already exists";
+                return new Pair<Boolean, String>(false,"User with such phone number already exists");
             }
-            query1 = "INSERT INTO Accounts(name, password, country, city, name, phone, info) " +
-                    "VALUES(\""+name+"\",\""+generateHash(password)+"\",\""+country+"\",\""+city+"\",\""+email+"\",\""+phone+"\",\""+info+"\");";
+
+            query1 = "INSERT INTO Accounts(email, password, name, surname, phone) " +
+                    "VALUES(\""+email+"\",\""+generateHash(password)+"\",\""+name+"\",\""+surname+"\",\""+phone+"\");";
             st.executeUpdate(query1);
             System.out.println("NewUser Added Successfully");
             toReturn = "NewUser Added Successfully";
-            return "NewUser Added Successfully";
+            return new Pair<Boolean, String>(true,"NewUser Added Successfully");
         } catch (Exception ex) {
             System.out.println("Exception in addNewUser: "+ex.getMessage());
         } finally {
-            return toReturn;
+            return new Pair<Boolean, String>(false,"EXCEPTION IN Request.addNewUser");
         }
+    }
+
+    public Pair<Boolean,String> addListing(String email, String title , String city , String building , String num_of_rooms , String description , String price , String contact_info){
+
+
+        return null;
     }
 
     public Pair<Boolean,String> checkNameAndPassword(String name, String password){
@@ -114,6 +113,8 @@ class Request {
         }
     }
 
+    //old method for sprint 1
+    @Deprecated
     public List<Listing> getAllListings(){
         System.out.println("2");
         List<Listing> list = new LinkedList();
@@ -232,6 +233,7 @@ class Request {
             return list;
         }
     }
+
 
     public static String generateHash(String input) {
         //taken from https://dzone.com/articles/storing-passwords-java-web for now
