@@ -1,6 +1,7 @@
 
 
 public class Listing {
+    int id;
     String email;
     String title;
     String city;
@@ -12,8 +13,7 @@ public class Listing {
     String contact_info;
 
 
-
-    public Listing(String email, String title, String city, String building, int num_of_rooms, String description, int price, String postdate, String contact_info){
+    public Listing(int id, String email, String title, String city, String building, int num_of_rooms, String description, int price, String postdate, String contact_info) {
         this.email = email;
         this.title = title;
         this.city = city;
@@ -23,6 +23,14 @@ public class Listing {
         this.contact_info = contact_info;
         this.postdate = postdate;
         this.num_of_rooms = num_of_rooms;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -96,4 +104,13 @@ public class Listing {
     public void setContact_info(String contact_info) {
         this.contact_info = contact_info;
     }
+
+    public String toString() {
+        String string = "";
+        string += this.email;
+        string += " " + num_of_rooms + " " + price + "";
+
+        return string;
+    }
 }
+
