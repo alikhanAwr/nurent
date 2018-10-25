@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 class Request {
 
@@ -20,7 +21,7 @@ class Request {
         Pair<Boolean,String> ret = null;
         try {
 
-            String query1 = "SELECT * FROM Accounts WHERE name = \"" + name +"\";";
+            String query1 = "SELECT * FROM Accounts WHERE email = \"" + name +"\";";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
@@ -29,7 +30,7 @@ class Request {
                 toReturn = "User with such name already exists";
                 ret = new Pair<>(false,toReturn);
             } else {
-                query1 = "INSERT INTO Accounts(name, password) " +
+                query1 = "INSERT INTO Accounts(email, password) " +
                         "VALUES(\""+name+"\",\""+generateHash(password)+"\");";
                 st.executeUpdate(query1);
                 System.out.println("NewUser Added Successfully");
@@ -43,6 +44,30 @@ class Request {
         }
     }
 
+    public String generateToken(String email){
+        String uuid = UUID.randomUUID().toString();
+        connector cnnt = new connector();
+        String toReturn = null;
+        try {
+
+            String query1 = "UPDATE Accounts SET token = '"+uuid+"' WHERE email = '"+email+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            st.executeUpdate(query1);
+        } catch (Exception ex) {
+            System.out.println("Exception in addNewUser: "+ex.getMessage());
+        } finally {
+            return uuid;
+        }
+    }
+
+    public boolean checkToken(String token_to_check){
+        return false;
+    }
+
+    public void deleteToken(String token_to_delete){
+
+    }
 
     public Pair<Boolean,String> addNewUser(String email, String password, String name, String surname, String phone){
         connector cnnt = new connector();
@@ -84,13 +109,14 @@ class Request {
         return null;
     }
 
+
     public Pair<Boolean,String> checkNameAndPassword(String name, String password){
         String toReturn = null;
         connector cnnt = new connector();
         Connection conn = cnnt.getConnection();
         Pair<Boolean,String> ret = null;
         try {
-            String query2 = "SELECT password FROM Accounts WHERE name = \""+name+"\";";
+            String query2 = "SELECT password FROM Accounts WHERE email = \""+name+"\";";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query2);
             boolean next = rs.next();
@@ -143,8 +169,12 @@ class Request {
         }
     }
 
-    //possible sort_types: by_num_of_rooms , by_city_name , by_price ; posiible sort_order: asc , desc (or)  ASC , DESC ; if sort_order == null -> asc will be used
-    public List<Listing> getListingsByParameters(String city, String minprice, String maxprice, String min_num_of_rooms, String max_num_of_rooms, String sort_by, String order_by){
+    // possible sort_types: by_num_of_rooms , by_city_name , by_price ;
+    // posiible sort_order: asc , desc (or)  ASC , DESC ;
+    // if sort_order == null -> asc will be used
+    public List<Listing> getListingsByParameters(String city, String minprice, String maxprice,
+                                                 String min_num_of_rooms, String max_num_of_rooms,
+                                                 String sort_by, String order_by){
         System.out.println("3");
         boolean and = false;
         List<Listing> list = new LinkedList();
