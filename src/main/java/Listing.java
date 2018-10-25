@@ -14,6 +14,7 @@ public class Listing {
 
 
     public Listing(int id, String email, String title, String city, String building, int num_of_rooms, String description, int price, String postdate, String contact_info) {
+        this.id = id;
         this.email = email;
         this.title = title;
         this.city = city;
