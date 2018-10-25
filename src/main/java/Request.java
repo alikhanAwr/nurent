@@ -44,20 +44,16 @@ class Request {
         }
     }
 
-    public String generateToken(String email){
-        String uuid = UUID.randomUUID().toString();
+    public void generateToken(String email, String token){
         connector cnnt = new connector();
         String toReturn = null;
         try {
-
-            String query1 = "UPDATE Accounts SET token = '"+uuid+"' WHERE email = '"+email+"';";
+            String query1 = "UPDATE Accounts SET token = '"+token+"' WHERE email = '"+email+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
         } catch (Exception ex) {
             System.out.println("Exception in addNewUser: "+ex.getMessage());
-        } finally {
-            return uuid;
         }
     }
 
@@ -69,7 +65,7 @@ class Request {
 
     }
 
-    public Pair<Boolean,String> addNewUser(String email, String password, String name, String surname, String phone){
+    public void addNewUser(String email, String password, String name, String surname, String phone) throws Exception{
         connector cnnt = new connector();
         String toReturn = null;
         try {
@@ -78,28 +74,20 @@ class Request {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
-                System.out.println("User with such email already exists");
-                toReturn = "User with such email already exists";
-                return new Pair<Boolean, String>(false,"User with such email already exists");
+                throw new Exception("User with such email already exists");
             }
             query1 = "SELECT * FROM Accounts WHERE phone = \"" + phone +"\";";
             rs = st.executeQuery(query1);
             if(rs.next()){
-                System.out.println("User with such phone number already exists");
-                toReturn = "User with such phone number already exists";
-                return new Pair<Boolean, String>(false,"User with such phone number already exists");
+                throw new Exception("User with such phone number already exists");
             }
 
             query1 = "INSERT INTO Accounts(email, password, name, surname, phone) " +
                     "VALUES(\""+email+"\",\""+generateHash(password)+"\",\""+name+"\",\""+surname+"\",\""+phone+"\");";
             st.executeUpdate(query1);
-            System.out.println("NewUser Added Successfully");
-            toReturn = "NewUser Added Successfully";
-            return new Pair<Boolean, String>(true,"NewUser Added Successfully");
         } catch (Exception ex) {
-            System.out.println("Exception in addNewUser: "+ex.getMessage());
-        } finally {
-            return new Pair<Boolean, String>(false,"EXCEPTION IN Request.addNewUser");
+            System.out.println("Exception in checkNameAndPassword: "+ex.getMessage());
+            throw new Exception("Exception in checkNameAndPassword:" + ex.getMessage());
         }
     }
 
