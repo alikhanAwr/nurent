@@ -125,7 +125,7 @@
 
 
     </style>
-<--!hey-->
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .dropbtn {
@@ -136,6 +136,7 @@
             border: none;
             cursor: pointer;
         }
+
 
         .dropbtn:hover, .dropbtn:focus {
             background-color: #3e8e41;
@@ -189,7 +190,7 @@
     <h1>Nu Rent</h1>
 
     <div class="dropdown">
-        <button id ="buttonid" onclick="myFunction()" class="dropbtn">Dropdown</button>
+        <button id ="buttonid" onclick="myFunction()" class="dropbtn">Select City</button>
         <div id="myDropdown" class="dropdown-content">
             <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
             <a href="#astana" id="Astana" onclick="display(id)">Astana</a>
@@ -200,6 +201,15 @@
             <a href="#kostanay" id="Kostanay" onclick="display(id)">Kostanay</a>
             <a href="#karaganda" id="Karaganda" onclick="display(id)">Karaganda</a>
         </div>
+
+        Price:
+        <input id="minprice" type="text" size="15"> - <input if="maxprice" type="text" size="15">
+
+        Number of rooms:
+        <input id="minrooms" type="text" size="7"> - <input if="maxrooms" type="text" size="7">
+
+        <button id="submit_button" type="button" >Submit</button>
+
     </div>
 
     <script>
