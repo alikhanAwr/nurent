@@ -341,7 +341,7 @@ class Request {
             if(rs.next()){
                 email1 = rs.getString("email");
             }
-            query1 = "SELECT email FROM Accounts WHERE id = "+id+";";
+            query1 = "SELECT email FROM Listings WHERE id = "+id+";";
             conn = cnnt.getConnection();
             st = conn.createStatement();
             rs = st.executeQuery(query1);
