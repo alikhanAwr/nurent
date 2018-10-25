@@ -3,10 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/lodash.min.js"></script>
+
+    <script type="text/javascript">
+        var listings = [];
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.replace("/");
+        }
+
+        // function checkIfLoggedIn() {
+        //     var token = localStorage.getItem("token");
+        //     if (token == null) {
+        //         window.location.replace("/nurent/login")
+        //     }
+        // }
+
+        function getListings() {
+            var token = localStorage.getItem("token");
+
+            $.ajax({
+                url: "profile/getlistings",
+                dataType: 'json',
+                method: 'GET',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                        logout();
+                    }
+                },
+                success: function (r) {
+                    listings = r;
+                    updateList();
+                }
+            })
+        }
+
+        function updateList() {
+            $("#listings-list").empty();
+
+
+            for (var i in listings) {
+                console.log(listings[i].id);
+
+                console.log(listings[i].title);
+                $("#listings-list").append("<li class='listing'>" + listings[i].title + ", Price: " + listings[i].price
+                    + ", Address: " + listings[i].address + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description
+                    + "<button class='delete-listing' type='button'>delete</button>" + "</li>");
+
+            }
+        }
+
+        function deleteListing(button) {
+            var index = $(".delete-listing").index(button);
+            var id = listings[index].id;
+            var token = localStorage.getItem("token");
+
+            $.ajax({
+                url: "profile/deletelisting?" + $.param({"id": id}),
+                method: 'DELETE',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                    }
+                },
+                success: function (r) {
+                    getListings();
+                }
+            })
+
+        }
+
+
+        $(document).ready(function () {
+            var token = localStorage.getItem("token");
+            if (token == null) {
+                window.location.replace("/nurent/login")
+            } else {
+                getListings();
+            }
+
+            $(document).on('click', '.delete-listing', function (e) {
+                console.log("delete button pressed")
+                deleteListing(e.target);
+            });
+
+        })
+
+
+    </script>
 </head>
 <body>
 
 <a href="/">Go back</a>
+<button id="add-button">Add Listing</button>
+
+<div id="listings">
+    <ul id="listings-list"></ul>>
+</div>
 
 </body>
 </html>

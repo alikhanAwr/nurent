@@ -11,13 +11,13 @@
 
     <script type="text/javascript">
 
-        listings = [];
+        var listings = [];
 
-    function checkHeader() {
-          var email = sessionStorage.getItem("email");
-          if (email != null) {
+    function checkIfLoggedIn() {
+          var token = localStorage.getItem("token");
+          if (token != null) {
               $('#header').empty();
-              $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + email + "</button></a>");
+              $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + "Go to your profile" + "</button></a>");
           }
       }
 
@@ -34,10 +34,8 @@
             method : 'GET',
             success : function(r) {
 
-                       listings = r;
-                       updateList();
-
-
+                listings = r;
+                updateList();
 
             }
         });
@@ -62,7 +60,7 @@
 
 
     $(document).ready(function () {
-        checkHeader();
+        checkIfLoggedIn();
         getListings();
 
     });
@@ -125,7 +123,6 @@
 
 
     </style>
-<--!hey-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .dropbtn {
