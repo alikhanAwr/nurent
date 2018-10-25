@@ -38,17 +38,41 @@ public class LoginSignUp {
         String email = credentials.getEmail();
         String password = credentials.getPassword();
 
-        Pair<Boolean, String> result = request.checkNameAndPassword(email, password);
-//        Pair<Boolean, String> result = new Pair<>(false, "Incorrect name or password");
-        LoginResponse r = new LoginResponse(result.getKey(), result.getValue());
-        Gson gson = new Gson();
-        String json = gson.toJson(r, LoginResponse.class);
-        System.out.println(json);
-        if (!result.getKey()) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(json).build();
-        } else {
-            return Response.ok(json).build();
+//        Pair<Boolean, String> result = request.checkNameAndPassword(email, password);
+////        Pair<Boolean, String> result = new Pair<>(false, "Incorrect name or password");
+//        LoginResponse r = new LoginResponse(result.getKey(), result.getValue());
+//        String token = issueToken(email);
+//
+//        return Response.ok(token).build();
+//
+//
+//        Gson gson = new Gson();
+//        String json = gson.toJson(r, LoginResponse.class);
+//        System.out.println(json);
+//        if (!result.getKey()) {
+//            return Response.status(Response.Status.UNAUTHORIZED).entity(json).build();
+//        } else {
+//            return Response.ok(json).build();
+//        }
+
+        try {
+
+            request.checkNameAndPassword(email, password);
+
+            String token = issueToken(email);
+
+            return Response.ok(token).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         }
+    }
+
+
+    private String issueToken(String email) {
+
+
+        return "";
     }
 
     @POST

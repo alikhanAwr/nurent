@@ -110,7 +110,7 @@ class Request {
     }
 
 
-    public Pair<Boolean,String> checkNameAndPassword(String name, String password){
+    public void checkNameAndPassword(String name, String password) throws Exception {
         String toReturn = null;
         connector cnnt = new connector();
         Connection conn = cnnt.getConnection();
@@ -121,21 +121,18 @@ class Request {
             ResultSet rs = st.executeQuery(query2);
             boolean next = rs.next();
             if(!next){
-                ret = new Pair<>(false,"Invalid name");
+                throw new Exception("Invalid email");
             }
-            if(next){
-                String pass = rs.getString("password");
-                if(pass.equals(generateHash(password))){
-                    ret = new Pair<>(true,"Correct name and password");
-                } else {
-                    ret = new Pair<>(false,"Invalid password");
-                }
+
+            String pass = rs.getString("password");
+            if(!pass.equals(generateHash(password))){
+                throw new Exception("Invalid password");
             }
+
 
         } catch (Exception ex) {
             System.out.println("Exception in checkNameAndPassword: "+ex.getMessage());
-        } finally {
-            return ret;
+            throw new Exception("Exception in checkNameAndPassword:" + ex.getMessage());
         }
     }
 
