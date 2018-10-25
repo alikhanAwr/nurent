@@ -44,16 +44,20 @@ class Request {
         }
     }
 
-    public void generateToken(String email, String token){
+    public String generateToken(String email){
+        String uuid = UUID.randomUUID().toString();
         connector cnnt = new connector();
         String toReturn = null;
         try {
-            String query1 = "UPDATE Accounts SET token = '"+token+"' WHERE email = '"+email+"';";
+
+            String query1 = "UPDATE Accounts SET token = '"+uuid+"' WHERE email = '"+email+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
         } catch (Exception ex) {
             System.out.println("Exception in addNewUser: "+ex.getMessage());
+        } finally {
+            return uuid;
         }
     }
 
