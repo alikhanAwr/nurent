@@ -182,7 +182,8 @@ class Request {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             while(rs.next()) {
-               Listing listing = new Listing(rs.getString("email"),
+               Listing listing = new Listing(rs.getInt("id"),
+                                            rs.getString("email"),
                                             rs.getString("title"),
                                             rs.getString("city"),
                                             rs.getString("building"),
@@ -206,7 +207,6 @@ class Request {
     public List<Listing> getListingsByParameters(String city, String minprice, String maxprice,
                                                  String min_num_of_rooms, String max_num_of_rooms,
                                                  String sort_by, String order_by){
-        System.out.println("3");
         boolean and = false;
         List<Listing> list = new LinkedList();
         connector cnnt = new connector();
@@ -276,7 +276,8 @@ class Request {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             while(rs.next()) {
-                Listing listing = new Listing(rs.getString("email"),
+                Listing listing = new Listing(rs.getInt("id"),
+                        rs.getString("email"),
                         rs.getString("title"),
                         rs.getString("city"),
                         rs.getString("building"),
@@ -309,7 +310,8 @@ class Request {
             }
             rs = st.executeQuery(query1);
             while(rs.next()){
-                Listing listing = new Listing(rs.getString("email"),
+                Listing listing = new Listing(rs.getInt("id"),
+                        rs.getString("email"),
                         rs.getString("title"),
                         rs.getString("city"),
                         rs.getString("building"),
@@ -324,6 +326,34 @@ class Request {
             System.out.println("Exception in getAllListings: "+ex.getMessage());
         } finally {
             return list;
+        }
+    }
+
+    public void deleteListing(String id , String token){
+        connector cnnt = new connector();
+        String email1 = "";
+        String email2 = "";
+        try {
+            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                email1 = rs.getString("email");
+            }
+            query1 = "SELECT email FROM Accounts WHERE id = "+id+";";
+            conn = cnnt.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery(query1);
+            if(rs.next()){
+                email2 = rs.getString("email");
+            }
+            if(email1.equals(email2)){
+                query1 = "DELETE FROM Listings WHERE id = "+id+";";
+                st.executeUpdate(query1);
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in deleteListing: "+ex.getMessage());
         }
     }
 
