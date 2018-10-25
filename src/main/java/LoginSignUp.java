@@ -2,7 +2,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.ServletContext;
@@ -59,7 +62,7 @@ public class LoginSignUp {
 
             request.checkNameAndPassword(email, password);
 
-            String token = issueToken(email);
+            String token = request.generateToken(email);
 
             return Response.ok(token).build();
 
@@ -69,11 +72,6 @@ public class LoginSignUp {
     }
 
 
-    private String issueToken(String email) {
-
-
-        return "";
-    }
 
     @POST
     @Path("signup")
