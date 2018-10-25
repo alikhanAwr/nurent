@@ -62,9 +62,28 @@ class Request {
         }
     }
 
-    public boolean checkToken(String token_to_check){
-        return false;
+    public boolean checkToken(String token){
+        connector cnnt = new connector();
+        boolean toReturn = false;
+        try {
+            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                toReturn = true;
+                return true;
+            }else{
+                toReturn = false;
+                return false;
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in checkToken() "+ex.getMessage());
+        } finally {
+            return toReturn;
+        }
     }
+
 
     public void deleteToken(String token_to_delete){
         connector cnnt = new connector();
@@ -126,7 +145,6 @@ class Request {
         }
     }
 
-
     public void checkNameAndPassword(String name, String password) throws Exception {
         String toReturn = null;
         connector cnnt = new connector();
@@ -156,7 +174,6 @@ class Request {
     //old method for sprint 1
     @Deprecated
     public List<Listing> getAllListings(){
-        System.out.println("2");
         List<Listing> list = new LinkedList();
         connector cnnt = new connector();
         try {
@@ -277,6 +294,7 @@ class Request {
         }
     }
 
+
     public List<Listing> getListingsForUser(String token){
         List<Listing> list = new LinkedList();
         connector cnnt = new connector();
@@ -290,7 +308,7 @@ class Request {
                 email = rs.getString("email");
             }
             rs = st.executeQuery(query1);
-            while(rs.next()) {
+            while(rs.next()){
                 Listing listing = new Listing(rs.getString("email"),
                         rs.getString("title"),
                         rs.getString("city"),
