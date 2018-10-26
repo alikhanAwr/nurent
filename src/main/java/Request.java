@@ -131,14 +131,16 @@ class Request {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
         try {
             String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            System.out.println(query1);
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
                 email = rs.getString("email");
             }
-            query1 = "INSERT INTO Listings(email, title, city, building, num_of_rooms, description, price, postdate) " +
-                    "VALUES('"+email+"','"+title+"','"+city+"','"+building+"',"+num_of_rooms+",'"+description+"',"+price+",'"+contact_info+"';";
+            query1 = "INSERT INTO Listings(email, title, city, building, num_of_rooms, description, price, contact_info , postdate) " +
+                    "VALUES('"+email+"','"+title+"','"+city+"','"+building+"',"+num_of_rooms+",'"+description+"',"+price+",'"+contact_info+"','"+timeStamp+"');";
+            System.out.println(query1);
             st.executeUpdate(query1);
         } catch (Exception ex) {
             System.out.println("Exception in addListing() "+ex.getMessage());

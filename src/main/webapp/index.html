@@ -22,18 +22,27 @@
       }
 
     function getListings() {
-        var title;
-        var description;
-        var price;
-        var address;
-        var postdate;
-        var username;
+        alert(1);
+        var e = document.getElementById("buttonid");
+        var city = e.innerHTML;
+        var minprice = document.getElementById("minprice").value;
+        var maxprice = document.getElementById("maxprice").value;
+        var min_number_of_rooms = document.getElementById("minrooms").value;
+        var max_number_of_rooms = document.getElementById("maxrooms").value;
+
+        console.log(city);
         $.ajax({
            url : 'nurent/listings',
             dataType: 'json',
             method : 'GET',
+            data: {
+                "city": city,
+                "minprice" : minprice,
+                "maxprice" : maxprice,
+                "min_number_of_rooms" : min_number_of_rooms,
+                "max_number_of_rooms" : max_number_of_rooms
+            },
             success : function(r) {
-
                 listings = r;
                 updateList();
 
@@ -186,7 +195,7 @@
     <h1>Nu Rent</h1>
 
     <div class="dropdown">
-        <button id ="buttonid" onclick="myFunction()" class="dropbtn">Dropdown</button>
+        <button id ="buttonid" onclick="myFunction()" class="dropbtn">City</button>
         <div id="myDropdown" class="dropdown-content">
             <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
             <a href="#astana" id="Astana" onclick="display(id)">Astana</a>
@@ -200,12 +209,12 @@
         </div>
 
         Price:
-        <input id="minprice" type="text" size="15"> - <input if="maxprice" type="text" size="15">
+        <input id="minprice" type="text" size="15"> - <input id="maxprice" type="text" size="15">
 
         Number of rooms:
-        <input id="minrooms" type="text" size="7"> - <input if="maxrooms" type="text" size="7">
+        <input id="minrooms" type="text" size="7"> - <input id="maxrooms" type="text" size="7">
 
-        <button id="submit_button" type="button" >Submit</button>
+        <button id="submit_button" type="button" onclick="getListings()">Submit</button>
 
     </div>
 
@@ -218,6 +227,9 @@
 
         function display(id){
             document.getElementById("buttonid").innerHTML=id;
+            var e = document.getElementById("buttonid");
+            var strUser = e.innerHTML;
+            console.log(strUser);
         }
 
         function filterFunction() {
