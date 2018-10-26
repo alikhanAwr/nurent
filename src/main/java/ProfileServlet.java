@@ -18,12 +18,6 @@ public class ProfileServlet {
 
     private Request request = new Request();
 
-    List<Listing> listings = new LinkedList<Listing>(
-            Arrays.asList(new Listing(1, "a@a.com", "title", "Astana", "fas", 3, "dfafd", 231, "fasdfsad", "fsdfsad"),
-                    new Listing(2, "a@a.com", "title", "Astana", "fas", 3, "dfafd", 231, "fasdfsad", "fsdfsad"),
-                    new Listing(3, "a@a.com", "title", "Astana", "fas", 3, "dfafd", 231, "fasdfsad", "fsdfsad"))
-    );
-
 
     @GET
     @Produces({MediaType.TEXT_HTML})
@@ -35,33 +29,29 @@ public class ProfileServlet {
     @Path("getlistings")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getListings(@Context HttpHeaders headers) {
-//
-//        List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-//
-//        System.out.println(auth);
-//
-//        if (auth == null || auth.size() == 0) {
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
-//
-//        if (!isCorrectAuthHeader(auth.get(0))) {
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
-//
-//        String token = auth.get(0).substring("Bearer".length()).trim();
-//
-//        if (request.checkToken(token)) {
-//            List<Listing> listings = request.getListingsForUser(token);
-//            Gson gson = new Gson();
-//            String json = gson.toJson(listings);
-//            return Response.ok(json).build();
-//        } else {
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
 
-        Gson gson = new Gson();
-        String json = gson.toJson(listings);
-        return Response.ok(json).build();
+        List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+
+        System.out.println(auth);
+
+        if (auth == null || auth.size() == 0) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        if (!isCorrectAuthHeader(auth.get(0))) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        String token = auth.get(0).substring("Bearer".length()).trim();
+
+        if (request.checkToken(token)) {
+            List<Listing> listings = request.getListingsForUser(token);
+            Gson gson = new Gson();
+            String json = gson.toJson(listings);
+            return Response.ok(json).build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     @DELETE
