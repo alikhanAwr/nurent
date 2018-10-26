@@ -41,17 +41,18 @@
 
            var token = localStorage.getItem("token");
 
-            // var data = {
-            //     title: title,
-            //     city: city,
-            //     building: building,
-            //     num_of_rooms: number_of_rooms,
-            //     description: description,
-            //     price: price,
-            //     contact_info: contact_info
-            // };
+            var data = {
+                title: title,
+                city: city,
+                building: building,
+                num_of_rooms: number_of_rooms,
+                description: description,
+                price: price,
+                contact_info: contact_info
+            };
 
-            // console.log(data);
+
+
 
             $.ajax({
                 url: "add",
@@ -60,16 +61,9 @@
                 headers: {
                     "Authorization": "Bearer " + token
                 },
-                data: {
-                    title: title,
-                    city: city,
-                    building: building,
-                    num_of_rooms: number_of_rooms,
-                    description: description,
-                    price: price,
-                    contact_info: contact_info
-                },
-                processData: false,
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                processData: true,
                 statusCode : {
                     401: function (r) {
                         console.log(r);
