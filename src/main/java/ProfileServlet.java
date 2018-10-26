@@ -3,10 +3,7 @@ import com.google.gson.Gson;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -30,7 +27,7 @@ public class ProfileServlet {
 
     @GET
     @Produces({MediaType.TEXT_HTML})
-    public InputStream getMyList() throws FileNotFoundException {
+    public InputStream getMyProfile() throws FileNotFoundException {
         return context.getResourceAsStream("profile.html");
     }
 
@@ -86,6 +83,51 @@ public class ProfileServlet {
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+    }
+
+
+    @GET
+    @Path("create")
+    @Produces({MediaType.TEXT_HTML})
+    public InputStream getMyList() throws FileNotFoundException {
+        System.out.println("GET");
+        return context.getResourceAsStream("addListing.html");
+    }
+
+
+//    @QueryParam("title") String title, @QueryParam("city") String city,
+//    @QueryParam("building") String building, @QueryParam("num_of_rooms") String numOfRooms,
+//    @QueryParam("description") String description, @QueryParam("price") String price,
+//    @QueryParam("contact_info") String contactInfo,
+
+    @POST
+    @Path("add")
+    public Response addListing(@Context HttpHeaders headers, @Context UriInfo uriInfo) {
+//        List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+//
+//        System.out.println(auth);
+//
+//        if (auth == null || auth.size() == 0) {
+//            return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+//
+//        if (!isCorrectAuthHeader(auth.get(0))) {
+//            return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+//
+//        String token = auth.get(0).substring("Bearer".length()).trim();
+//
+//        if (request.checkToken(token)) {
+//            request.addListing(listing.title, listing.city, listing.building, Integer.toString(listing.num_of_rooms),
+//                    listing.description, Integer.toString(listing.price), listing.contact_info, token);
+//            return Response.ok().build();
+//        } else {
+//            return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+
+        System.out.println(uriInfo.getQueryParameters());
+        System.out.println("POST");
+        return Response.ok().build();
     }
 
 

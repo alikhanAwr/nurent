@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a listings</title>
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/lodash.min.js"></script>
+
+    <script type="text/javascript">
+        function buildInput() {
+            for(var i=1; i<=24; i++){
+                console.log(i);
+                var select = document.getElementsByName("number-of-rooms")[0];
+                var option = document.createElement("OPTION");
+                select.options.add(option);
+                option.text = i;
+                option.value = i;
+            }
+        }
+
+
+        function sendListing() {
+
+
+
+            var title = $("input[name=title]").val();
+            var city = $("input[name=city]").val();
+            var building = $("input[name=building]").val();
+            var e = document.getElementsByName("number-of-rooms")[0];
+            var number_of_rooms = e.value;
+            var description = $("textarea[name=description]").val();
+            var price = $("input[name=price]").val();
+            var contact_info = $("input[name=number]").val();
+
+
+
+            if (!title || !city || !building || !number_of_rooms || !description || !price || !contact_info) {
+                document.title = 'Fill every fields';
+                return;
+            }
+
+           var token = localStorage.getItem("token");
+
+            // var data = {
+            //     title: title,
+            //     city: city,
+            //     building: building,
+            //     num_of_rooms: number_of_rooms,
+            //     description: description,
+            //     price: price,
+            //     contact_info: contact_info
+            // };
+
+            // console.log(data);
+
+            $.ajax({
+                url: "add",
+                method: 'POST',
+                type: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                data: {
+                    title: title,
+                    city: city,
+                    building: building,
+                    num_of_rooms: number_of_rooms,
+                    description: description,
+                    price: price,
+                    contact_info: contact_info
+                },
+                processData: false,
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                        localStorage.removeItem("token");
+                        window.location.replace("/nurent/login");
+                    }
+                },
+                success: function (r) {
+                    console.log("success");
+                    window.location.replace("/nurent/profile");
+                }
+            })
+
+            // $.ajax({
+            //     url: "add",
+            //     method: 'POST',
+            //     type: 'POST',
+            //     headers: {
+            //         "Authorization": "Bearer " + token
+            //     },
+            //     statusCode : {
+            //         401: function (r) {
+            //             console.log(r);
+            //             localStorage.removeItem("token");
+            //             window.location.replace("/nurent/login");
+            //         }
+            //     },
+            //     success: function (r) {
+            //         // console.log("success");
+            //         // window.location.replace("/nurent/profile");
+            //     }
+            // });
+
+        }
+        $(document).ready(function () {
+            var token = localStorage.getItem("token");
+            if (!token) {
+                window.location.replace("/");
+            }
+            buildInput();
+            $("#submit-button").on('click', function () {
+                sendListing();
+            });
+
+        })
+
+
+
+
+
+
+
+
+    </script>
+</head>
+<body>
+
+    <form>
+        Title:<br>
+        <input type="text" name="title"><br>
+        City:
+        <input type="text" name="city"><br>
+        Building: <br>
+        <input type="text" name="building"><br>
+        Number of rooms:
+        <select name="number-of-rooms">
+
+        </select><br>
+        Description:<br>
+        <textarea name="description" style="width:250px;height:150px;"></textarea><br>
+
+        Price in Tenge:<br>
+        <input type="number" name="price"><br>
+        Contact number:<br>
+        <input type="text" name="number"><br>
+        <input type="button" value="Submit" id="submit-button">
+    </form>
+
+
+
+
+
+    <button id="cancel-button">Cancel</button>
+</body>
+</html>
