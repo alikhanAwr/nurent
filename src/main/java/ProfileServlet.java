@@ -89,11 +89,6 @@ public class ProfileServlet {
     }
 
 
-//    @QueryParam("title") String title, @QueryParam("city") String city,
-//    @QueryParam("building") String building, @QueryParam("num_of_rooms") String numOfRooms,
-//    @QueryParam("description") String description, @QueryParam("price") String price,
-//    @QueryParam("contact_info") String contactInfo,
-
     @POST
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -123,6 +118,28 @@ public class ProfileServlet {
 //        System.out.println(listing.getBuilding());
 //        System.out.println("POST");
 //        return Response.ok().build();
+    }
+
+    @GET
+    @Path("logout")
+    public Response logout (@Context HttpHeaders headers, ListingPost listing) {
+        List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+
+        System.out.println(auth);
+
+        if (auth == null || auth.size() == 0) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        if (!isCorrectAuthHeader(auth.get(0))) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        String token = auth.get(0).substring("Bearer".length()).trim();
+
+        request.deleteToken(token);
+        return Response.ok().build();
+
     }
 
 
