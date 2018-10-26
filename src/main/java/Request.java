@@ -308,6 +308,7 @@ class Request {
             if(rs.next()){
                 email = rs.getString("email");
             }
+            query1 = "SELECT * FROM Listings WHERE email = '"+email+"';";
             rs = st.executeQuery(query1);
             while(rs.next()){
                 Listing listing = new Listing(rs.getInt("id"),
