@@ -1,5 +1,4 @@
 
-
 public class Listing {
     int id;
     String email;

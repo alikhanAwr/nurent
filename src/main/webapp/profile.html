@@ -22,7 +22,7 @@
         // }
 
         function sendLogout() {
-
+            var token = localStorage.getItem("token");
             $.ajax({
                 url: "profile/logout",
                 headers: {
@@ -131,7 +131,7 @@
 
 <a href="/">Go back</a>
 <a href="/nurent/profile/create">Create a Listing</a>
-<button id="logout">logout</button>
+<button id="logout" ONCLICK="sendLogout()">logout</button>
 
 <div id="listings">
     <ul id="listings-list"></ul>>

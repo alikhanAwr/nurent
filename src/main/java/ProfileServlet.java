@@ -124,7 +124,7 @@ public class ProfileServlet {
     @Path("logout")
     public Response logout (@Context HttpHeaders headers, ListingPost listing) {
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-
+        System.out.println("logout");
         System.out.println(auth);
 
         if (auth == null || auth.size() == 0) {

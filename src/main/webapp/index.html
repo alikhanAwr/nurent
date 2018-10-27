@@ -22,7 +22,6 @@
       }
 
     function getListings() {
-        alert(1);
         var e = document.getElementById("buttonid");
         var city = e.innerHTML;
         var minprice = document.getElementById("minprice").value;
@@ -57,9 +56,9 @@
             for (var i in listings) {
 
                 console.log(listings[i].title);
-                $("#listings-list").append("<li>" + listings[i].title + ", Price: " + listings[i].price + ", Address: " + listings[i].address + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description);
+                $("#listings-list").append("<li>" + "<fieldset>"+ listings[i].title + ", Price: " + listings[i].price + ", Rooms: "+ listings[i].num_of_rooms +", City: " + listings[i].city + ", Adress: " + listings[i].building +" , Postdate: " + listings[i].postdate + ", Description: " + listings[i].description);
 
-                $("#listings-list").append("</li>");
+                $("#listings-list").append("</fieldset></li>");
 
             }
 
@@ -198,6 +197,7 @@
         <button id ="buttonid" onclick="myFunction()" class="dropbtn">City</button>
         <div id="myDropdown" class="dropdown-content">
             <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+            <a href="#astana" id="City" onclick="display(id)">City</a>
             <a href="#astana" id="Astana" onclick="display(id)">Astana</a>
             <a href="#almaty" id="Almaty" onclick="display(id)">Almaty</a>
             <a href="#aktobe" id="Aktobe" onclick="display(id)">Aktobe</a>

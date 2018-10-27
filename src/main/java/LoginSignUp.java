@@ -30,8 +30,8 @@ public class LoginSignUp {
     @Produces({MediaType.TEXT_HTML})
     public InputStream getMyList() throws FileNotFoundException {
         return context.getResourceAsStream("login.html");
-
     }
+
 
     @POST
     @Path("signin")
