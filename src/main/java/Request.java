@@ -23,7 +23,7 @@ class Request {
         Pair<Boolean,String> ret = null;
         try {
 
-            String query1 = "SELECT * FROM Accounts WHERE email = \"" + name +"\";";
+            String query1 = "SELECT * FROM Accounts WHERE username = \"" + name +"\";";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
@@ -32,7 +32,7 @@ class Request {
                 toReturn = "User with such name already exists";
                 ret = new Pair<>(false,toReturn);
             } else {
-                query1 = "INSERT INTO Accounts(email, password) " +
+                query1 = "INSERT INTO Accounts(username, password) " +
                         "VALUES(\""+name+"\",\""+generateHash(password)+"\");";
                 st.executeUpdate(query1);
                 System.out.println("NewUser Added Successfully");
@@ -46,12 +46,12 @@ class Request {
         }
     }
 
-    public String generateToken(String email){
+    public String generateToken(String username){
         String uuid = UUID.randomUUID().toString();
         connector cnnt = new connector();
         String toReturn = null;
         try {
-            String query1 = "UPDATE Accounts SET token = '"+uuid+"' WHERE email = '"+email+"';";
+            String query1 = "UPDATE Accounts SET token = '"+uuid+"' WHERE username = '"+username+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
@@ -66,7 +66,7 @@ class Request {
         connector cnnt = new connector();
         boolean toReturn = false;
         try {
-            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            String query1 = "SELECT username FROM Accounts WHERE token = '"+token+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
@@ -98,16 +98,16 @@ class Request {
         }
     }
 
-    public void addNewUser(String email, String password, String name, String surname, String phone) throws Exception{
+    public void addNewUser(String username, String password, String name, String surname, String phone) throws Exception{
         connector cnnt = new connector();
         String toReturn = null;
         try {
-            String query1 = "SELECT * FROM Accounts WHERE email = \""+ email +"\";";
+            String query1 = "SELECT * FROM Accounts WHERE username = \""+ username +"\";";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
-                throw new Exception("User with such email already exists");
+                throw new Exception("User with such username already exists");
             }
             query1 = "SELECT * FROM Accounts WHERE phone = \"" + phone +"\";";
             rs = st.executeQuery(query1);
@@ -115,8 +115,8 @@ class Request {
                 throw new Exception("User with such phone number already exists");
             }
 
-            query1 = "INSERT INTO Accounts(email, password, name, surname, phone) " +
-                    "VALUES(\""+email+"\",\""+generateHash(password)+"\",\""+name+"\",\""+surname+"\",\""+phone+"\");";
+            query1 = "INSERT INTO Accounts(username, password, name, surname, phone) " +
+                    "VALUES(\""+username+"\",\""+generateHash(password)+"\",\""+name+"\",\""+surname+"\",\""+phone+"\");";
             st.executeUpdate(query1);
         } catch (Exception ex) {
             System.out.println("Exception in checkNameAndPassword: "+ex.getMessage());
@@ -127,19 +127,19 @@ class Request {
     public void addListing( String title , String city , String building , String num_of_rooms , String description , String price , String contact_info, String token){
         connector cnnt = new connector();
         String toReturn = null;
-        String email = "";
+        String username = "";
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
         try {
-            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            String query1 = "SELECT username FROM Accounts WHERE token = '"+token+"';";
             System.out.println(query1);
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
-                email = rs.getString("email");
+                username = rs.getString("username");
             }
-            query1 = "INSERT INTO Listings(email, title, city, building, num_of_rooms, description, price, contact_info , postdate) " +
-                    "VALUES('"+email+"','"+title+"','"+city+"','"+building+"',"+num_of_rooms+",'"+description+"',"+price+",'"+contact_info+"','"+timeStamp+"');";
+            query1 = "INSERT INTO Listings(username, title, city, building, num_of_rooms, description, price, contact_info , postdate) " +
+                    "VALUES('"+username+"','"+title+"','"+city+"','"+building+"',"+num_of_rooms+",'"+description+"',"+price+",'"+contact_info+"','"+timeStamp+"');";
             System.out.println(query1);
             st.executeUpdate(query1);
         } catch (Exception ex) {
@@ -153,12 +153,12 @@ class Request {
         Connection conn = cnnt.getConnection();
         Pair<Boolean,String> ret = null;
         try {
-            String query2 = "SELECT password FROM Accounts WHERE email = \""+name+"\";";
+            String query2 = "SELECT password FROM Accounts WHERE username = \""+name+"\";";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query2);
             boolean next = rs.next();
             if(!next){
-                throw new Exception("Invalid email");
+                throw new Exception("Invalid username");
             }
 
             String pass = rs.getString("password");
@@ -185,7 +185,7 @@ class Request {
             ResultSet rs = st.executeQuery(query1);
             while(rs.next()) {
                Listing listing = new Listing(rs.getInt("id"),
-                                            rs.getString("email"),
+                                            rs.getString("username"),
                                             rs.getString("title"),
                                             rs.getString("city"),
                                             rs.getString("building"),
@@ -279,7 +279,7 @@ class Request {
             ResultSet rs = st.executeQuery(query1);
             while(rs.next()) {
                 Listing listing = new Listing(rs.getInt("id"),
-                        rs.getString("email"),
+                        rs.getString("username"),
                         rs.getString("title"),
                         rs.getString("city"),
                         rs.getString("building"),
@@ -291,7 +291,7 @@ class Request {
                 ((LinkedList<Listing>) list).addLast(listing);
             }
         } catch (Exception ex) {
-            System.out.println("Exception in getAllListings: "+ex.getMessage());
+            System.out.println("Exception in getListingsByParameters: "+ex.getMessage());
         } finally {
             return list;
         }
@@ -301,20 +301,20 @@ class Request {
     public List<Listing> getListingsForUser(String token){
         List<Listing> list = new LinkedList();
         connector cnnt = new connector();
-        String email = "";
+        String username = "";
         try {
-            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            String query1 = "SELECT username FROM Accounts WHERE token = '"+token+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
-                email = rs.getString("email");
+                username = rs.getString("username");
             }
-            query1 = "SELECT * FROM Listings WHERE email = '"+email+"';";
+            query1 = "SELECT * FROM Listings WHERE username = '"+username+"';";
             rs = st.executeQuery(query1);
             while(rs.next()){
                 Listing listing = new Listing(rs.getInt("id"),
-                        rs.getString("email"),
+                        rs.getString("username"),
                         rs.getString("title"),
                         rs.getString("city"),
                         rs.getString("building"),
@@ -334,24 +334,24 @@ class Request {
 
     public void deleteListing(String id , String token){
         connector cnnt = new connector();
-        String email1 = "";
-        String email2 = "";
+        String username1 = "";
+        String username2 = "";
         try {
-            String query1 = "SELECT email FROM Accounts WHERE token = '"+token+"';";
+            String query1 = "SELECT username FROM Accounts WHERE token = '"+token+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
             if(rs.next()){
-                email1 = rs.getString("email");
+                username1 = rs.getString("username");
             }
-            query1 = "SELECT email FROM Listings WHERE id = "+id+";";
+            query1 = "SELECT username FROM Listings WHERE id = "+id+";";
             conn = cnnt.getConnection();
             st = conn.createStatement();
             rs = st.executeQuery(query1);
             if(rs.next()){
-                email2 = rs.getString("email");
+                username2 = rs.getString("username");
             }
-            if(email1.equals(email2)){
+            if(username1.equals(username2)){
                 query1 = "DELETE FROM Listings WHERE id = "+id+";";
                 st.executeUpdate(query1);
             }
