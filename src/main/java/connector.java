@@ -9,7 +9,7 @@ class connector{
             try {
 
                 Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/nurent", "root", "password123");
+                conn = DriverManager.getConnection("jdbc:mysql://10.10.3.14:3306/bitlab", "bitlab", "password");
                 System.out.println("Database is connected !");
                 if (conn == null){
                     System.out.println("null2");
