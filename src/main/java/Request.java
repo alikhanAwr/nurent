@@ -83,8 +83,7 @@ class Request {
             return toReturn;
         }
     }
-
-
+    
     public void deleteToken(String token_to_delete){
         connector cnnt = new connector();
         String toReturn = null;
@@ -94,7 +93,20 @@ class Request {
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
         } catch (Exception ex) {
-            System.out.println("Exception in generateToken(): "+ex.getMessage());
+            System.out.println("Exception in deleteToken(): "+ex.getMessage());
+        }
+    }
+
+    public void deleteTokenForModerator(String token_to_delete){
+        connector cnnt = new connector();
+        String toReturn = null;
+        try {
+            String query1 = "UPDATE Moderators SET token = NULL WHERE token = '"+token_to_delete+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            st.executeUpdate(query1);
+        } catch (Exception ex) {
+            System.out.println("Exception in deleteTokenForModerator(): "+ex.getMessage());
         }
     }
 
@@ -119,8 +131,28 @@ class Request {
                     "VALUES(\""+username+"\",\""+generateHash(password)+"\",\""+name+"\",\""+surname+"\",\""+phone+"\");";
             st.executeUpdate(query1);
         } catch (Exception ex) {
-            System.out.println("Exception in checkNameAndPassword: "+ex.getMessage());
-            throw new Exception("Exception in checkNameAndPassword:" + ex.getMessage());
+            System.out.println("Exception in addNewUser: "+ex.getMessage());
+            throw new Exception("Exception in addNewUser:" + ex.getMessage());
+        }
+    }
+
+    public void addNewModerator(String username, String password) throws Exception{
+        connector cnnt = new connector();
+        String toReturn = null;
+        try {
+            String query1 = "SELECT * FROM Moderators WHERE username = \""+ username +"\";";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                throw new Exception("Moderator with such username already exists");
+            }
+            query1 = "INSERT INTO Moderators(username, password) " +
+                    "VALUES(\""+username+"\",\""+generateHash(password)+"\");";
+            st.executeUpdate(query1);
+        } catch (Exception ex) {
+            System.out.println("Exception in addNewModerator: "+ex.getMessage());
+            throw new Exception("Exception in addNewModerator:" + ex.getMessage());
         }
     }
 
@@ -202,6 +234,7 @@ class Request {
             return list;
         }
     }
+
 
     // possible sort_types: by_num_of_rooms , by_city_name , by_price ;
     // posiible sort_order: asc , desc (or)  ASC , DESC ;
@@ -326,7 +359,7 @@ class Request {
                 ((LinkedList<Listing>) list).addLast(listing);
             }
         } catch (Exception ex) {
-            System.out.println("Exception in getAllListings: "+ex.getMessage());
+            System.out.println("Exception in getListingsForUser: "+ex.getMessage());
         } finally {
             return list;
         }
@@ -363,7 +396,6 @@ class Request {
     public void deleteListingForModerator(String id , String token){
         connector cnnt = new connector();
         String username1 = "";
-        String username2 = "";
         try {
             String query1 = "SELECT username FROM Moderators WHERE token = '"+token+"';";
             Connection conn = cnnt.getConnection();
@@ -379,6 +411,23 @@ class Request {
         }
     }
 
+    public void approveListing(String id , String token){
+        connector cnnt = new connector();
+        String username1 = "";
+        try {
+            String query1 = "SELECT username FROM Moderators WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                username1 = rs.getString("username");
+                query1 = "UPDATE Listings SET status = 'visible' WHERE id = "+id+";";
+                st.executeUpdate(query1);
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in approveListing: "+ex.getMessage());
+        }
+    }
 
     public static String generateHash(String input) {
         //taken from https://dzone.com/articles/storing-passwords-java-web for now
