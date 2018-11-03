@@ -360,6 +360,25 @@ class Request {
         }
     }
 
+    public void deleteListingForModerator(String id , String token){
+        connector cnnt = new connector();
+        String username1 = "";
+        String username2 = "";
+        try {
+            String query1 = "SELECT username FROM Moderators WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                username1 = rs.getString("username");
+                query1 = "DELETE FROM Listings WHERE id = "+id+";";
+                st.executeUpdate(query1);
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in deleteListingForModerator: "+ex.getMessage());
+        }
+    }
+
 
     public static String generateHash(String input) {
         //taken from https://dzone.com/articles/storing-passwords-java-web for now
