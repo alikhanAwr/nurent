@@ -48,6 +48,7 @@ class Request {
 
     public String generateToken(String username){
         String uuid = UUID.randomUUID().toString();
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
         connector cnnt = new connector();
         String toReturn = null;
         try {
@@ -167,15 +168,27 @@ class Request {
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query1);
-            if(rs.next()){
+            if(rs.next()) {
                 username = rs.getString("username");
+                query1 = "INSERT INTO Listings(username, title, city, building, num_of_rooms, description, price, contact_info , postdate) " +
+                        "VALUES('" + username + "','" + title + "','" + city + "','" + building + "'," + num_of_rooms + ",'" + description + "'," + price + ",'" + contact_info + "','" + timeStamp + "');";
+                System.out.println(query1);
+                st.executeUpdate(query1);
+                String query2 = "INSERT INTO Logs(date_time, username, activity, result, additional_info)" +
+                        "VALUES('" + timeStamp + "','" + username + "','Add Listing','Success','" + title + "');";
+                st.executeUpdate(query2);
             }
-            query1 = "INSERT INTO Listings(username, title, city, building, num_of_rooms, description, price, contact_info , postdate) " +
-                    "VALUES('"+username+"','"+title+"','"+city+"','"+building+"',"+num_of_rooms+",'"+description+"',"+price+",'"+contact_info+"','"+timeStamp+"');";
-            System.out.println(query1);
-            st.executeUpdate(query1);
         } catch (Exception ex) {
-            System.out.println("Exception in addListing() "+ex.getMessage());
+            try {
+                System.out.println("Exception in addListing() " + ex.getMessage());
+                Connection conn = cnnt.getConnection();
+                Statement st = conn.createStatement();
+                String query2 = "INSERT INTO Logs(date_time, username, activity, result, additional_info)" +
+                        "VALUES('" + timeStamp + "','" + username + "','Add Listing','Failure','" + ex.getMessage() + "');";
+                st.executeUpdate(query2);
+            }catch(Exception ex2){
+                System.out.println("Exception in addListing() 2" + ex.getMessage());
+            }
         }
     }
 
@@ -183,13 +196,16 @@ class Request {
         String toReturn = null;
         connector cnnt = new connector();
         Connection conn = cnnt.getConnection();
-        Pair<Boolean,String> ret = null;
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
         try {
-            String query2 = "SELECT password FROM Accounts WHERE username = \""+name+"\";";
+            String query1 = "SELECT password FROM Accounts WHERE username = \""+name+"\";";
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query2);
+            ResultSet rs = st.executeQuery(query1);
             boolean next = rs.next();
             if(!next){
+                String query2 = "INSERT INTO Logs(date_time, username, activity, result, additional_info)" +
+                        "VALUES('" + timeStamp + "','not logged in','Add Listing','Success','Invalid username');";
+                st.executeUpdate(query2);
                 throw new Exception("Invalid username");
             }
 
@@ -428,6 +444,8 @@ class Request {
             System.out.println("Exception in approveListing: "+ex.getMessage());
         }
     }
+
+    
 
     public static String generateHash(String input) {
         //taken from https://dzone.com/articles/storing-passwords-java-web for now
