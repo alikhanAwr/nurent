@@ -84,15 +84,47 @@ class Request {
             return toReturn;
         }
     }
+
+    public boolean checkTokenForModerator(String token){
+        connector cnnt = new connector();
+        boolean toReturn = false;
+        try {
+            String query1 = "SELECT username FROM Moderators WHERE token = '"+token+"';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if(rs.next()){
+                toReturn = true;
+                return true;
+            }else{
+                toReturn = false;
+                return false;
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in checkTokenForModerator() "+ex.getMessage());
+        } finally {
+            return toReturn;
+        }
+    }
     
     public void deleteToken(String token_to_delete){
         connector cnnt = new connector();
         String toReturn = null;
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+        String username = "";
         try {
-            String query1 = "UPDATE Accounts SET token = NULL WHERE token = '"+token_to_delete+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
+            String query0 = "SELECT username FROM Accounts WHERE token = '"+token_to_delete+"';";
+            ResultSet rs = st.executeQuery(query0);
+            if(rs.next()){
+                username = rs.getString("username");
+            }
+            String query1 = "UPDATE Accounts SET token = NULL WHERE token = '"+token_to_delete+"';";
             st.executeUpdate(query1);
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','"+username+"','Log Out','Success');";
+            st.executeUpdate(query2);
         } catch (Exception ex) {
             System.out.println("Exception in deleteToken(): "+ex.getMessage());
         }
@@ -101,11 +133,16 @@ class Request {
     public void deleteTokenForModerator(String token_to_delete){
         connector cnnt = new connector();
         String toReturn = null;
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+        String username = "";
         try {
             String query1 = "UPDATE Moderators SET token = NULL WHERE token = '"+token_to_delete+"';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','"+username+"','Log Out(Moderator)','Success');";
+            st.executeUpdate(query2);
         } catch (Exception ex) {
             System.out.println("Exception in deleteTokenForModerator(): "+ex.getMessage());
         }
@@ -204,17 +241,20 @@ class Request {
             boolean next = rs.next();
             if(!next){
                 String query2 = "INSERT INTO Logs(date_time, username, activity, result, additional_info)" +
-                        "VALUES('" + timeStamp + "','not logged in','Add Listing','Success','Invalid username');";
+                        "VALUES('" + timeStamp + "','not logged in: "+name+"','Log In','Failure','Invalid username');";
                 st.executeUpdate(query2);
                 throw new Exception("Invalid username");
             }
-
             String pass = rs.getString("password");
             if(!pass.equals(generateHash(password))){
+                String query2 = "INSERT INTO Logs(date_time, username, activity, result, additional_info)" +
+                        "VALUES('" + timeStamp + "','not logged in: "+name+" ','Log In','Failure','Invalid password');";
+                st.executeUpdate(query2);
                 throw new Exception("Invalid password");
             }
-
-
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','"+name+"','Log In','Success');";
+            st.executeUpdate(query2);
         } catch (Exception ex) {
             System.out.println("Exception in checkNameAndPassword: "+ex.getMessage());
             throw new Exception("Exception in checkNameAndPassword:" + ex.getMessage());
@@ -347,6 +387,7 @@ class Request {
     }
 
 
+
     public List<Listing> getListingsForUser(String token){
         List<Listing> list = new LinkedList();
         connector cnnt = new connector();
@@ -374,6 +415,10 @@ class Request {
                         rs.getString("contact_info"));
                 ((LinkedList<Listing>) list).addLast(listing);
             }
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','"+username+"','Visiting Profile','Success');";
+            st.executeUpdate(query2);
         } catch (Exception ex) {
             System.out.println("Exception in getListingsForUser: "+ex.getMessage());
         } finally {
