@@ -670,6 +670,165 @@ class Request {
         }
     }
 
+    public List<Listing> getListingsUnderModeration(String token){
+        LinkedList<Listing> list = new LinkedList();
+        connector cnnt = new connector();
+        String username = "";
+        try {
+            String query1 = "SELECT username FROM Accounts WHERE token = '" + token + "';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+            query1 = "SELECT * FROM Listings WHERE username = '"+username+"' AND status = 'under moderation';";
+            rs = st.executeQuery(query1);
+            while (rs.next()) {
+                Listing listing = new Listing(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("city"),
+                        rs.getString("building"),
+                        rs.getInt("num_of_rooms"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getString("postdate"),
+                        rs.getString("contact_info"),
+                        rs.getString("status"),
+                        rs.getString("comment"));
+                list.addLast(listing);
+            }
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','" + username + "','Visiting Profile','Success');";
+            st.executeUpdate(query2);
+        } catch (Exception ex) {
+            System.out.println("Exception in getListingsUnderModeration: " + ex.getMessage());
+        } finally {
+            return list;
+        }
+    }
+
+    public List<Listing> getVisibleListings(String token){
+        LinkedList<Listing> list = new LinkedList();
+        connector cnnt = new connector();
+        String username = "";
+        try {
+            String query1 = "SELECT username FROM Accounts WHERE token = '" + token + "';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+            query1 = "SELECT * FROM Listings WHERE username = '"+username+"' AND status = 'visible';";
+            rs = st.executeQuery(query1);
+            while (rs.next()) {
+                Listing listing = new Listing(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("city"),
+                        rs.getString("building"),
+                        rs.getInt("num_of_rooms"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getString("postdate"),
+                        rs.getString("contact_info"),
+                        rs.getString("status"),
+                        rs.getString("comment"));
+                list.addLast(listing);
+            }
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','" + username + "','Visiting Profile','Success');";
+            st.executeUpdate(query2);
+        } catch (Exception ex) {
+            System.out.println("Exception in getVisibleListings: " + ex.getMessage());
+        } finally {
+            return list;
+        }
+    }
+
+    public List<Listing> getHiddenListings(String token){
+        LinkedList<Listing> list = new LinkedList();
+        connector cnnt = new connector();
+        String username = "";
+        try {
+            String query1 = "SELECT username FROM Accounts WHERE token = '" + token + "';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+            query1 = "SELECT * FROM Listings WHERE username = '"+username+"' AND status = 'hidden';";
+            rs = st.executeQuery(query1);
+            while (rs.next()) {
+                Listing listing = new Listing(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("city"),
+                        rs.getString("building"),
+                        rs.getInt("num_of_rooms"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getString("postdate"),
+                        rs.getString("contact_info"),
+                        rs.getString("status"),
+                        rs.getString("comment"));
+                list.addLast(listing);
+            }
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','" + username + "','Visiting Profile','Success');";
+            st.executeUpdate(query2);
+        } catch (Exception ex) {
+            System.out.println("Exception in getHiddenListings: " + ex.getMessage());
+        } finally {
+            return list;
+        }
+    }
+
+    public List<Listing> getNotApprovedListings(String token){
+        LinkedList<Listing> list = new LinkedList();
+        connector cnnt = new connector();
+        String username = "";
+        try {
+            String query1 = "SELECT username FROM Accounts WHERE token = '" + token + "';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+            query1 = "SELECT * FROM Listings WHERE username = '"+username+"' AND status = 'not approved';";
+            rs = st.executeQuery(query1);
+            while (rs.next()) {
+                Listing listing = new Listing(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("title"),
+                        rs.getString("city"),
+                        rs.getString("building"),
+                        rs.getInt("num_of_rooms"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getString("postdate"),
+                        rs.getString("contact_info"),
+                        rs.getString("status"),
+                        rs.getString("comment"));
+                list.addLast(listing);
+            }
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+            String query2 = "INSERT INTO Logs(date_time, username, activity, result)" +
+                    "VALUES('" + timeStamp + "','" + username + "','Visiting Profile','Success');";
+            st.executeUpdate(query2);
+        } catch (Exception ex) {
+            System.out.println("Exception in getNotApprovedListings: " + ex.getMessage());
+        } finally {
+            return list;
+        }
+    }
 
 
 
