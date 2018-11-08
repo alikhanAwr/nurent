@@ -58,19 +58,14 @@ public class ProfileServlet {
     @Path("deletelisting")
     public Response deleteListing(@Context HttpHeaders headers, @QueryParam("id") String listingId) {
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-
         System.out.println(auth);
-
         if (auth == null || auth.size() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-
         if (!isCorrectAuthHeader(auth.get(0))) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-
         String token = auth.get(0).substring("Bearer".length()).trim();
-
         if (request.checkToken(token)) {
             request.deleteListing(listingId, token);
             return Response.ok().build();
@@ -79,6 +74,25 @@ public class ProfileServlet {
         }
     }
 
+    @POST
+    @Path("hidelisting")
+    public Response hideListing(@Context HttpHeaders headers, @QueryParam("id") String listingId) {
+        List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+        System.out.println(auth);
+        if (auth == null || auth.size() == 0) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        if (!isCorrectAuthHeader(auth.get(0))) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        String token = auth.get(0).substring("Bearer".length()).trim();
+        if (request.checkToken(token)) {
+            request.hideListing(listingId, token);
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
 
     @GET
     @Path("create")

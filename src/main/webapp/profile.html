@@ -5,7 +5,6 @@
     <title>Profile</title>
     <script src="/scripts/jquery.min.js"></script>
     <script src="/scripts/lodash.min.js"></script>
-
     <script type="text/javascript">
         var listings = [];
 
@@ -70,13 +69,18 @@
 
             for (var i in listings) {
                 console.log(listings[i].id);
+                var comment;
+                if(listings[i].comment == null){
+                    comment = "no comment";
+                }else{
+                    comment = listings[i].comment;
+                }
 
                 console.log(listings[i].title);
                 $("#listings-list").append("<li class='listing'>" + listings[i].title + ", Price: " + listings[i].price
                     + ", City: " + listings[i].city
-                    + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description
-                    + "<button class='delete-listing' type='button'>delete</button>" + "</li>");
-
+                    + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + ", Status: " + listings[i].status + ", Comment: " + comment + "  "
+                    + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button'>hide</button>" + "</li>");
             }
         }
 
@@ -84,7 +88,6 @@
             var index = $(".delete-listing").index(button);
             var id = listings[index].id;
             var token = localStorage.getItem("token");
-
             $.ajax({
                 url: "profile/deletelisting?" + $.param({"id": id}),
                 method: 'DELETE',
@@ -100,7 +103,27 @@
                     getListings();
                 }
             })
+        }
 
+        function hideListing(button) {
+            var index = $(".hide-listing").index(button);
+            var id = listings[index].id;
+            var token = localStorage.getItem("token");
+            $.ajax({
+                url: "profile/hidelisting?" + $.param({"id": id}),
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                    }
+                },
+                success: function (r) {
+                    getListings();
+                }
+            })
         }
 
 
@@ -111,17 +134,18 @@
             } else {
                 getListings();
             }
-
             $(document).on('click', '.delete-listing', function (e) {
                 console.log("delete button pressed")
                 deleteListing(e.target);
             });
-
+            $(document).on('click', '.hide-listing', function (e) {
+                console.log("hide button pressed")
+                hideListing(e.target);
+            });
             $(document).on('click', '.logout', function (e) {
                 console.log("logout button pressed")
                 sendLogout();
             });
-
         })
 
 
