@@ -57,21 +57,11 @@ public class ListingsServlet {
         if(max_num_of_rooms.equals("")){
             max_num_of_rooms = null;
         }
-        System.out.println(city);
-        System.out.println(minprice);
-        System.out.println(maxprice);
-        System.out.println(min_num_of_rooms);
-        System.out.println(max_num_of_rooms);
         String sort_by = null;
         String order_by = null;
-        System.out.println("l1");
         List<Listing> listings = request.getListingsByParameters(city, minprice, maxprice, min_num_of_rooms, max_num_of_rooms, sort_by, order_by);
-        System.out.println("l2");
         Gson gson = new Gson();
-        System.out.println("l3");
         String json = gson.toJson(listings);
-        System.out.println("l4");
-        System.out.println(json);
         return Response.ok(json).build();//123
     }
 

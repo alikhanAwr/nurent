@@ -32,8 +32,6 @@ public class ProfileServlet {
 
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
 
-        System.out.println(auth);
-
         if (auth == null || auth.size() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -58,7 +56,6 @@ public class ProfileServlet {
     @Path("deletelisting")
     public Response deleteListing(@Context HttpHeaders headers, @QueryParam("id") String listingId) {
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println(auth);
         if (auth == null || auth.size() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -78,7 +75,6 @@ public class ProfileServlet {
     @Path("hidelisting")
     public Response hideListing(@Context HttpHeaders headers, @QueryParam("id") String listingId) {
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println(auth);
         if (auth == null || auth.size() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -109,8 +105,6 @@ public class ProfileServlet {
     public Response addListing(@Context HttpHeaders headers, ListingPost listing) {
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
 
-        System.out.println(auth);
-
         if (auth == null || auth.size() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -129,9 +123,6 @@ public class ProfileServlet {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-//        System.out.println(listing.getBuilding());
-//        System.out.println("POST");
-//        return Response.ok().build();
     }
 
     @GET
@@ -139,8 +130,6 @@ public class ProfileServlet {
     public Response logout (@Context HttpHeaders headers, ListingPost listing) {
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
         System.out.println("logout");
-        System.out.println(auth);
-
         if (auth == null || auth.size() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
