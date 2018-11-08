@@ -10,9 +10,11 @@ public class Listing {
     int price;
     String postdate;
     String contact_info;
+    String status;
+    String comment;
 
 
-    public Listing(int id, String username, String title, String city, String building, int num_of_rooms, String description, int price, String postdate, String contact_info) {
+    public Listing(int id, String username, String title, String city, String building, int num_of_rooms, String description, int price, String postdate, String contact_info, String status , String comment) {
         this.id = id;
         this.username = username;
         this.title = title;
@@ -23,6 +25,8 @@ public class Listing {
         this.contact_info = contact_info;
         this.postdate = postdate;
         this.num_of_rooms = num_of_rooms;
+        this.status = status;
+        this.comment = comment;
     }
 
     public String getUsername() {
@@ -103,6 +107,22 @@ public class Listing {
 
     public void setContact_info(String contact_info) {
         this.contact_info = contact_info;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String toString() {
