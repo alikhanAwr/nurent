@@ -5,9 +5,17 @@ public class Account {
     String surname;
     String email;
     String phone;
-    float rating;
-    int votes;
-    String token;
+    String banned;
+    String comment;
+
+    Account(String username, String password, String name, String surname, String email, String phone){
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+    }
 
     public String getUsername() {
         return username;
@@ -57,31 +65,23 @@ public class Account {
         this.phone = phone;
     }
 
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public int getVotes() {
-        return votes;
-    }
-
-    public void setVotes(int votes) {
-        this.votes = votes;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String toString(){
         return "username: "+username+" ;";
+    }
+
+    public String getBanned() {
+        return banned;
+    }
+
+    public void setBanned(String banned) {
+        this.banned = banned;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
