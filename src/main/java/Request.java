@@ -1,7 +1,4 @@
-
-
 import javafx.util.Pair;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -53,6 +50,23 @@ class Request {
         String toReturn = null;
         try {
             String query1 = "UPDATE Accounts SET token = '" + uuid + "' WHERE username = '" + username + "';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            st.executeUpdate(query1);
+        } catch (Exception ex) {
+            System.out.println("Exception in generateToken(): " + ex.getMessage());
+        } finally {
+            return uuid;
+        }
+    }
+
+    public String generateTokenForModerator(String username) {
+        String uuid = UUID.randomUUID().toString();
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd-HH.mm.ss").format(Calendar.getInstance().getTime());
+        connector cnnt = new connector();
+        String toReturn = null;
+        try {
+            String query1 = "UPDATE Moderators SET token = '" + uuid + "' WHERE username = '" + username + "';";
             Connection conn = cnnt.getConnection();
             Statement st = conn.createStatement();
             st.executeUpdate(query1);
@@ -325,7 +339,6 @@ class Request {
         }
     }
 
-
     // possible sort_types: by_num_of_rooms , by_city_name , by_price ;
     // posiible sort_order: asc , desc (or)  ASC , DESC ;
     // if sort_order == null -> asc will be used
@@ -423,7 +436,6 @@ class Request {
             return list;
         }
     }
-
 
     public List<Listing> getListingsForUser(String token) {
         LinkedList<Listing> list = new LinkedList();
@@ -661,7 +673,7 @@ class Request {
 
 
 
-    public static String generateHash(String input) {
+    private static String generateHash(String input) {
         //taken from https://dzone.com/articles/storing-passwords-java-web for now
         StringBuilder hash = new StringBuilder();
         final String SALT = "bitlabnurent";
