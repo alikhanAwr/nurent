@@ -80,7 +80,7 @@
                 $("#listings-list").append("<li class='listing'>" + listings[i].title + ", Price: " + listings[i].price
                     + ", City: " + listings[i].city
                     + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + ", Status: " + listings[i].status + ", Comment: " + comment + "  "
-                    + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button'>hide</button>" + "</li>");
+                    + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button'>hide</button>" + "<button class='show-listing' type='button'>show</button>"+ "</li>");
             }
         }
 
@@ -126,6 +126,27 @@
             })
         }
 
+        function showListing(button) {
+            var index = $(".show-listing").index(button);
+            var id = listings[index].id;
+            var token = localStorage.getItem("token");
+            $.ajax({
+                url: "profile/showlisting?" + $.param({"id": id}),
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                    }
+                },
+                success: function (r) {
+                    getListings();
+                }
+            })
+        }
+
 
         $(document).ready(function () {
             var token = localStorage.getItem("token");
@@ -141,6 +162,10 @@
             $(document).on('click', '.hide-listing', function (e) {
                 console.log("hide button pressed")
                 hideListing(e.target);
+            });
+            $(document).on('click', '.show-listing', function (e) {
+                console.log("hide button pressed")
+                showListing(e.target);
             });
             $(document).on('click', '.logout', function (e) {
                 console.log("logout button pressed")
