@@ -136,7 +136,7 @@ public class ProfileServlet {
 
         if (request.checkToken(token)) {
             request.addListing(listing.getTitle(), listing.getCity(), listing.getBuilding(), listing.getNum_of_rooms(),
-                    listing.getDescription(), listing.getNum_of_rooms(), listing.getContact_info(), token);
+                    listing.getDescription(), listing.getPrice(), listing.getContact_info(), token);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
