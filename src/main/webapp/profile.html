@@ -7,6 +7,10 @@
     <script src="/scripts/lodash.min.js"></script>
     <script type="text/javascript">
         var listings = [];
+        var approved = [];
+        var hidden = [];
+        var disapproved = [];
+        var pending = [];
 
         function logout() {
             localStorage.removeItem("token");
@@ -64,27 +68,46 @@
         }
 
         function updateList() {
-            $("#listings-list").empty();
+            $("#approved-list").empty();
+            $("#disapproved-list").empty();
+            $("#hidden-list").empty();
+
 
 
             for (var i in listings) {
                 console.log(listings[i].id);
                 var comment;
-                if(listings[i].comment == null){
-                    comment = "no comment";
-                }else{
-                    comment = listings[i].comment;
-                }
+                // if(listings[i].comment == null){
+                //     comment = "no comment";
+                // }else{
+                //     comment = listings[i].comment;
+                // }
 
-                console.log(listings[i].title);
-                $("#listings-list").append("<li class='listing'>" + listings[i].title + ", Price: " + listings[i].price
-                    + ", City: " + listings[i].city
-                    + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + ", Status: " + listings[i].status + ", Comment: " + comment + "  "
-                    + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button'>hide</button>" + "</li>");
+                if(listings[i].status === "visible") {
+                    $("#listings-list").append("<li class='approved-listing'>" + listings[i].title + ", Price: " + listings[i].price
+                        + ", City: " + listings[i].city
+                        + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + "  "
+                        + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button'>hide</button>" + "<button class='show-listing' type='button' style='display:none;'>show</button>"+ "</li>")
+                } else if (listings[i].status === "hidden") {
+                    $("#listings-list").append("<li class='hidden-listing'>" + listings[i].title + ", Price: " + listings[i].price
+                        + ", City: " + listings[i].city
+                        + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + "  "
+                        + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button' style='display:none;'>hide</button>" + "<button class='show-listing' type='button'>show</button>" + "</li>")
+                } else if (listings[i].status === "under moderation") {
+                    $("#listings-list").append("<li class='pending-listing'>" + listings[i].title + ", Price: " + listings[i].price
+                        + ", City: " + listings[i].city
+                        + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + "  "
+                        + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button' style='display:none;'>hide</button>" + "<button class='show-listing' type='button' style='display:none;'>show</button>" + "</li>")
+                } else if(listings[i].status === "not approved") {
+                    $("#listings-list").append("<li class='disapproved-listing'>" + listings[i].title + ", Price: " + listings[i].price
+                        + ", City: " + listings[i].city
+                        + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + ", Status: " + listings[i].status + ", Comment: " + comment + "  "
+                        + "<button class='delete-listing' type='button'>delete</button>" + "<button class='hide-listing' type='button' style='display:none;'>hide</button>" + "<button class='show-listing' type='button' style='display:none;'>show</button>" + "</li>");
+                }
             }
         }
 
-        function deleteListing(button) {
+        function deleteListing(button, code) {
             var index = $(".delete-listing").index(button);
             var id = listings[index].id;
             var token = localStorage.getItem("token");
@@ -107,10 +130,31 @@
 
         function hideListing(button) {
             var index = $(".hide-listing").index(button);
-            var id = listings[index].id;
+            var id = approved[index].id;
             var token = localStorage.getItem("token");
             $.ajax({
                 url: "profile/hidelisting?" + $.param({"id": id}),
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                    }
+                },
+                success: function (r) {
+                    getListings();
+                }
+            })
+        }
+
+        function showListing(button) {
+            var index = $(".show-listing").index(button);
+            var id = hidden[index].id;
+            var token = localStorage.getItem("token");
+            $.ajax({
+                url: "profile/showlisting?" + $.param({"id": id}),
                 method: 'POST',
                 headers: {
                     "Authorization": "Bearer " + token
@@ -135,15 +179,19 @@
                 getListings();
             }
             $(document).on('click', '.delete-listing', function (e) {
-                console.log("delete button pressed")
+                console.log("delete button pressed");
                 deleteListing(e.target);
             });
             $(document).on('click', '.hide-listing', function (e) {
-                console.log("hide button pressed")
+                console.log("hide button pressed");
                 hideListing(e.target);
             });
+            $(document).on('click', '.show-listing', function (e) {
+                console.log("show button pressed");
+                showListing(e.target);
+            });
             $(document).on('click', '.logout', function (e) {
-                console.log("logout button pressed")
+                console.log("logout button pressed");
                 sendLogout();
             });
         })
@@ -160,6 +208,21 @@
 <div id="listings">
     <ul id="listings-list"></ul>>
 </div>
+
+<!--<div class="row" id="listings">-->
+    <!--<div class="column" id="approved">-->
+        <!--<ul id="approved-list"></ul>-->
+    <!--</div>-->
+    <!--<div class="column" id="pending">-->
+        <!--<ul id="pending-list"></ul>-->
+    <!--</div>-->
+    <!--<div class="column" id="disapproved">-->
+        <!--<ul id="disapproved-list"></ul>-->
+    <!--</div>-->
+    <!--<div class="column" id="hidden">-->
+        <!--<ul id="hidden-list"></ul>-->
+    <!--</div>-->
+<!--</div>-->
 
 </body>
 </html>
