@@ -131,7 +131,7 @@
         }
         function showListing(button) {
             var index = $(".show-listing").index(button);
-            var id = hidden[index].id;
+            var id = listings[index].id;
             var token = localStorage.getItem("token");
             $.ajax({
                 url: "profile/showlisting?" + $.param({"id": id}),
