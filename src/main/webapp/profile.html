@@ -7,10 +7,6 @@
     <script src="/scripts/lodash.min.js"></script>
     <script type="text/javascript">
         var listings = [];
-        var approved = [];
-        var hidden = [];
-        var disapproved = [];
-        var pending = [];
 
         function logout() {
             localStorage.removeItem("token");
@@ -68,10 +64,7 @@
         }
 
         function updateList() {
-            $("#approved-list").empty();
-            $("#disapproved-list").empty();
-            $("#hidden-list").empty();
-
+            $("#listings-list").empty();
 
 
             for (var i in listings) {
@@ -107,7 +100,7 @@
             }
         }
 
-        function deleteListing(button, code) {
+        function deleteListing(button) {
             var index = $(".delete-listing").index(button);
             var id = listings[index].id;
             var token = localStorage.getItem("token");
@@ -130,7 +123,7 @@
 
         function hideListing(button) {
             var index = $(".hide-listing").index(button);
-            var id = approved[index].id;
+            var id = listings[index].id;
             var token = localStorage.getItem("token");
             $.ajax({
                 url: "profile/hidelisting?" + $.param({"id": id}),
@@ -208,21 +201,6 @@
 <div id="listings">
     <ul id="listings-list"></ul>>
 </div>
-
-<!--<div class="row" id="listings">-->
-    <!--<div class="column" id="approved">-->
-        <!--<ul id="approved-list"></ul>-->
-    <!--</div>-->
-    <!--<div class="column" id="pending">-->
-        <!--<ul id="pending-list"></ul>-->
-    <!--</div>-->
-    <!--<div class="column" id="disapproved">-->
-        <!--<ul id="disapproved-list"></ul>-->
-    <!--</div>-->
-    <!--<div class="column" id="hidden">-->
-        <!--<ul id="hidden-list"></ul>-->
-    <!--</div>-->
-<!--</div>-->
 
 </body>
 </html>
