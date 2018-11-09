@@ -11,7 +11,8 @@ public class NuRentApplication extends Application {
     private Set<Class<?>> empty = new HashSet<Class<?>>();
     
     public NuRentApplication() {
-        singletons.add(new LoginSignUp());
+        singletons.add(new LoginServlet());
+        singletons.add(new SignupServlet());
         singletons.add(new ListingsServlet());
         singletons.add(new ProfileServlet());
     }

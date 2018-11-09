@@ -7,19 +7,16 @@
     <script src="/scripts/lodash.min.js"></script>
     <script type="text/javascript">
         var listings = [];
-
         function logout() {
             localStorage.removeItem("token");
             window.location.replace("/");
         }
-
         // function checkIfLoggedIn() {
         //     var token = localStorage.getItem("token");
         //     if (token == null) {
         //         window.location.replace("/nurent/login")
         //     }
         // }
-
         function sendLogout() {
             var token = localStorage.getItem("token");
             $.ajax({
@@ -37,12 +34,9 @@
                     logout();
                 }
             })
-
         }
-
         function getListings() {
             var token = localStorage.getItem("token");
-
             $.ajax({
                 url: "profile/getlistings",
                 dataType: 'json',
@@ -62,11 +56,8 @@
                 }
             })
         }
-
         function updateList() {
             $("#listings-list").empty();
-
-
             for (var i in listings) {
                 console.log(listings[i].id);
                 var comment;
@@ -75,7 +66,6 @@
                 // }else{
                 //     comment = listings[i].comment;
                 // }
-
                 if(listings[i].status === "visible") {
                     $("#listings-list").append("<li class='approved-listing'>" + listings[i].title + ", Price: " + listings[i].price
                         + ", City: " + listings[i].city
@@ -99,7 +89,6 @@
                 }
             }
         }
-
         function deleteListing(button) {
             var index = $(".delete-listing").index(button);
             var id = listings[index].id;
@@ -120,7 +109,6 @@
                 }
             })
         }
-
         function hideListing(button) {
             var index = $(".hide-listing").index(button);
             var id = listings[index].id;
@@ -141,7 +129,6 @@
                 }
             })
         }
-
         function showListing(button) {
             var index = $(".show-listing").index(button);
             var id = hidden[index].id;
@@ -162,8 +149,6 @@
                 }
             })
         }
-
-
         $(document).ready(function () {
             var token = localStorage.getItem("token");
             if (token == null) {
@@ -188,8 +173,6 @@
                 sendLogout();
             });
         })
-
-
     </script>
 </head>
 <body>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Log In</title>
+    <title>Moderator</title>
 
     <script src="/scripts/jquery.min.js"></script>
     <script src="/scripts/lodash.min.js"></script>
@@ -15,7 +15,7 @@
         function putLoginToken(token) {
             localStorage.setItem("token", token);
         }
-        
+
         function login() {
             var username = $("#username").val();
             if (isValidUsername(username)) {
@@ -25,7 +25,7 @@
                 };
 
                 $.ajax({
-                    url : 'login',
+                    url : 'moderator',
                     contentType : 'application/json',
                     dataType: 'text',
                     method : 'POST',
@@ -39,7 +39,7 @@
                     },
                     success : function (r) {
                         putLoginToken(r);
-                        window.location.replace("/");
+                        window.location.replace("/moderator/listings");
                     },
                     data: JSON.stringify(credentials)
                 });
@@ -49,48 +49,10 @@
             }
         }
 
-        // function singUp() {
-        //     var email = $("#signUpEmail").val();
-        //     if (isValidEmail(email)) {
-        //         var credentials = {
-        //             email: email,
-        //             password: $("#signUpPassword").val()
-        //         }
-        //         $.ajax({
-        //             url : 'login/signup',
-        //             contentType : 'application/json',
-        //             dataType: 'json',
-        //             method : 'POST',
-        //             statusCode : {
-        //                 401: function (r) {
-        //                     var message = r.responseJSON.message;
-        //                     console.log(r);
-        //                     $('#signUpIncorrect').empty();
-        //                     $('#signUpIncorrect').append("<p>"+ message + "</p>");
-        //                 }
-        //             },
-        //             success : function (r) {
-        //
-        //                 window.location.replace("/");
-        //             },
-        //             data: JSON.stringify(credentials)
-        //         });
-        //     } else {
-        //         $('#signUpIncorrect').empty();
-        //         $('#signUpIncorrect').append("<p>Incorrect email!</p>");
-        //     }
-        // }
-
-
         $(document).ready(function () {
             $("#loginButton").on('click', function() {
                 login();
             });
-
-            // $("#signUpButton").on('click', function() {
-            //     singUp();
-            // });
-
         });
 
     </script>
@@ -108,8 +70,6 @@
     <h1>Log In</h1>
 
     <fieldset>
-        <legend>Sign in</legend>
-
         <div id="loginIncorrect"></div>
 
         <div>
@@ -125,31 +85,7 @@
         <input type="submit" id="loginButton" value="Sign in">
     </fieldset>
 
-    <!--<h1>Sign Up</h1>-->
 
-    <!--<fieldset>-->
-        <!--<legend>Sign Up</legend>-->
-
-        <!--<div id="signUpIncorrect"></div>-->
-
-        <!--<div>-->
-            <!--<label for="signUpEmail">email:</label>-->
-            <!--<input type="email" id="signUpEmail" name="signUpEmail" required />-->
-        <!--</div>-->
-
-        <!--<div>-->
-            <!--<label for="signUpPassword">Password:</label>-->
-            <!--<input type="password" id="signUpPassword" name="signUpPassword" minlength="5" required/>-->
-        <!--</div>-->
-
-        <!--<input type="submit" id="signUpButton" value="Sign up">-->
-    <!--</fieldset>-->
 </div>
-
-
-<div>
-    <a href="signup">Sign Up</a>
-</div>
-
 </body>
 </html>

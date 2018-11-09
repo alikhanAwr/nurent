@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Moderator</title>
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/lodash.min.js"></script>
+
+    <script type="text/javascript">
+
+        var listings = [];
+
+        function sendLogout() {
+            var token = localStorage.getItem("token");
+            $.ajax({
+                url: "moderator/logout",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                        logout();
+                    }
+                },
+                success: function (r) {
+                    logout();
+                }
+            })
+
+        }
+
+        function logout() {
+
+            localStorage.removeItem("token");
+            window.location.replace("/");
+        }
+
+        function getListings() {
+            var token = localStorage.getItem("token");
+
+            $.ajax({
+                url : 'nurent/moderator/getPendingListings',
+                dataType: 'json',
+                method : 'GET',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                        logout();
+                    }
+                },
+                success : function(r) {
+                    listings = r;
+                    updateList();
+
+                }
+            });
+        }
+
+        function approveListing(button) {
+            var index = $(".approve").index(button);
+            var id = listings[index].id;
+            var token = localStorage.getItem("token");
+            $.ajax({
+                url: "moderatpr/listings/approve?" + $.param({"id": id}),
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                        logout();
+                    }
+                },
+                success: function (r) {
+                    getListings();
+                }
+            })
+        }
+
+        function disapproveListing(button) {
+            var index = $(".disapprove").index(button);
+            var id = listings[index].id;
+            var token = localStorage.getItem("token");
+
+            var comment = prompt("Enter the comment", "You Comment");
+            if (comment == null) {
+                return;
+            }
+
+            $.ajax({
+                url: "moderatpr/listings/disapprove?" + $.param({"id": id, "comment": comment}),
+                method: 'POST',
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                statusCode : {
+                    401: function (r) {
+                        console.log(r);
+                        logout();
+                    }
+                },
+                success: function (r) {
+                    getListings();
+                }
+            })
+        }
+
+        function updateList() {
+            $("#listings-list").empty();
+
+
+            for (var i in listings) {
+                $("#listings-list").append("<li class='listing'>" + listings[i].title + ", Price: " + listings[i].price
+                    + ", City: " + listings[i].city
+                    + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + ", Status: " + listings[i].status
+                    + "<button class='approve' type='button'>approve</button>" + "<button class='disapprove' type='button'>disapprove</button>" + "</li>");
+            }
+        }
+
+
+        $(document).ready(function () {
+            var token = localStorage.getItem("token");
+            if (token == null) {
+                window.location.replace("/")
+            } else {
+                getListings();
+            }
+
+            $(document).on('click', '.approve', function (e) {
+                approveListing(e.target);
+            });
+            $(document).on('click', '.disapprove', function (e) {
+                disapproveListing(e.target);
+            });
+            $(document).on('click', '.logout', function (e) {
+                console.log("logout button pressed");
+                sendLogout();
+            });
+
+
+        });
+
+    </script>
+</head>
+<body>
+<h1>Unaproved listings</h1>
+
+<div id="listings">
+    <ul id="listings-list"> </ul>>
+</div>
+
+</body>
+</html>

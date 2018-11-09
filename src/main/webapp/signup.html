@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/lodash.min.js"></script>
+
+    <script type="text/javascript">
+        function isValidEmail() {
+            var email = $("#signUpEmail").val();
+            return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test( email );
+        }
+
+        function isValidUsername() {
+            var username = $("#username").val();
+            return /^[a-z0-9_-]{3,15}$/.test(username);
+        }
+
+        function isValidName() {
+            var firstName = $("#firstName").val();
+            var lastName = $("#lastName").val();
+
+            return $.trim(firstName) && $.trim(lastName);
+        }
+
+        function isValidNumber() {
+            var number = $("#phone").val();
+            return number.length === 10;
+
+
+        }
+
+        function clearErrorMessages() {
+            $('#incorrectEmail').empty();
+            $('#incorrectUsername').empty();
+            $('#incorrectFirstName').empty();
+            $('#incorrectPhoneNumber').empty();
+        }
+
+
+        function putLoginToken(token) {
+            localStorage.setItem("token", token);
+        }
+
+
+        function areFieldsCorrect() {
+            var usernameBool = isValidUsername();
+            var emailBool =  isValidEmail();
+            var nameBool = isValidName();
+            var numberBool = isValidNumber();
+
+            return usernameBool && emailBool && nameBool && numberBool;
+        }
+
+        function singUp() {
+            clearErrorMessages();
+
+            if (areFieldsCorrect()) {
+                var username = $("#username").val();
+                var email = $("#signUpEmail").val();
+                var password = $("#signUpPassword").val();
+                var firstName = $("#firstName").val();
+                var lastName = $("#lastName").val();
+                var number = $("#phone").val();
+
+                var account = {
+                    username: username,
+                    password: password,
+                    name: firstName,
+                    surname: lastName,
+                    email: email,
+                    phone: number
+                };
+
+                console.log(JSON.stringify(account));
+
+                $.ajax({
+                    url : 'signup',
+                    contentType : 'application/json',
+                    dataType: 'json',
+                    method : 'POST',
+                    statusCode : {
+                        400: function (r) {
+                            var message = r.responseJSON.message;
+                            console.log(r);
+                            $('#incorrectSignup').empty();
+                            $('#incorrectSignup').append("<p>"+ message + "</p>");
+                        }
+                    },
+                    success : function (r) {
+                        putLoginToken(r);
+                        window.location.replace("/");
+                    },
+                    data: JSON.stringify(account)
+                });
+
+            } else {
+                if (!isValidEmail()) {
+                    $('#incorrectEmail').empty();
+                    $('#incorrectEmail').append("<p>Incorrect email!</p>");
+                }
+
+                if (!isValidUsername()) {
+                    $('#incorrectUsername').empty();
+                    $('#incorrectUsername').append("<p>Incorrect username!</p>");
+                }
+
+                if (!isValidName()) {
+                    $('#incorrectFirstName').empty();
+                    $('#incorrectUsername').append("<p>Incorrect names!</p>");
+                }
+
+                if(!isValidNumber()) {
+                    $('#incorrectPhoneNumber').empty();
+                    $('#incorrectPhoneNumber').append("<p>Incorrect phone number!</p>");
+                }
+            }
+        }
+
+
+        $(document).ready(function () {
+            $("#signUpButton").on('click', function() {
+                singUp();
+            });
+
+        });
+
+    </script>
+
+    <style>
+        div.error {
+            color: #ff7677;
+        }
+    </style>
+
+</head>
+<body>
+
+<div>
+
+
+    <h1>Sign Up</h1>
+
+    <fieldset>
+        <legend>Sign Up</legend>
+
+        <div class="error" id="incorrectSignup"></div>
+        <div class="error" id="incorrectEmail"></div>
+        <div class="error" id="incorrectUsername"></div>
+        <div class="error" id="incorrectPassword"></div>
+        <div class="error" id="incorrectFirstName"></div>
+        <div class="error" id="incorrectLastName"></div>
+        <div class="error" id="incorrectPhoneNumber"></div>
+
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+        </div>
+
+        <div>
+            <label for="signUpPassword">Password:</label>
+            <input type="password" id="signUpPassword" name="signUpPassword" minlength="5" required/>
+        </div>
+
+        <div>
+            <label for="signUpEmail">Email:</label>
+            <input type="email" id="signUpEmail" name="signUpEmail" required />
+        </div>
+
+        <div>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName">
+        </div>
+
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="firstName">
+        </div>
+
+        <div>
+            <label for="phone">Phone number: +7 </label>
+            <input type="text" id="phone" name="phone" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="10">
+        </div>
+
+
+        <input type="submit" id="signUpButton" value="Sign up">
+    </fieldset>
+
+
+    <div>
+        <a href="login">Log In</a>
+    </div>
+
+
+</div>
+
+</body>
+</html>

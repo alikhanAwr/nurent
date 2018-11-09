@@ -90,25 +90,6 @@ public class ProfileServlet {
         }
     }
 
-    @POST
-    @Path("showlisting")
-    public Response showListing(@Context HttpHeaders headers, @QueryParam("id") String listingId) {
-        List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-        if (auth == null || auth.size() == 0) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        if (!isCorrectAuthHeader(auth.get(0))) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        String token = auth.get(0).substring("Bearer".length()).trim();
-        if (request.checkToken(token)) {
-            request.showListing(listingId, token);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-    }
-
     @GET
     @Path("create")
     @Produces({MediaType.TEXT_HTML})
@@ -169,3 +150,4 @@ public class ProfileServlet {
         return header != null && header.toLowerCase().startsWith("bearer" + " ");
     }
 }
+
