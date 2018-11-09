@@ -542,6 +542,43 @@ class Request {
         }
     }
 
+    public void showListing(String id, String token) {
+        connector cnnt = new connector();
+        String username1 = "";
+        String username2 = "";
+        try {
+            String query1 = "SELECT username FROM Accounts WHERE token = '" + token + "';";
+            Connection conn = cnnt.getConnection();
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query1);
+            if (rs.next()) {
+                username1 = rs.getString("username");
+            }
+            query1 = "SELECT username FROM Listings WHERE id = " + id + ";";
+            conn = cnnt.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery(query1);
+            if (rs.next()) {
+                username2 = rs.getString("username");
+            }
+            if (username1.equals(username2)) {
+                query1 = "SELECT status FROM Listings WHERE id = " + id + ";";
+                conn = cnnt.getConnection();
+                st = conn.createStatement();
+                rs = st.executeQuery(query1);
+                if(rs.next()){
+                    String status = rs.getString("status");
+                    if(status.equals("hidden")){
+                        query1 = "UPDATE Listings SET status = 'visible' WHERE id = " + id + ";";
+                        st.executeUpdate(query1);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Exception in hideListing: " + ex.getMessage());
+        }
+    }
+
     public void deleteListingForModerator(String id, String token) {
         connector cnnt = new connector();
         String username1 = "";
