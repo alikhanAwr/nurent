@@ -53,8 +53,6 @@ public class ModeratorServlet {
     @Path("listings/getPendingListings")
     public Response getPendingListings(@Context HttpHeaders headers) {
 
-
-
         if (authenticate(headers)) {
             List<Listing> listings  = request.getListingsUnderModerationForModerator(getToken(headers));
             Gson gson = new Gson();
@@ -95,18 +93,19 @@ public class ModeratorServlet {
 
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
 
+        System.out.println(auth);
+
         if (auth == null || auth.size() == 0) {
             return false;
         }
 
         String header = auth.get(0);
 
-        if (header == null || header.toLowerCase().startsWith("bearer ")) {
+        if (header == null || !header.toLowerCase().startsWith("bearer ")) {
             return false;
         }
 
         String token = header.substring("Bearer".length()).trim();
-
         return request.checkTokenForModerator(token);
     }
 

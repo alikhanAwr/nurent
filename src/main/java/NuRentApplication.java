@@ -15,6 +15,7 @@ public class NuRentApplication extends Application {
         singletons.add(new SignupServlet());
         singletons.add(new ListingsServlet());
         singletons.add(new ProfileServlet());
+        singletons.add(new ModeratorServlet());
     }
     
     @Override

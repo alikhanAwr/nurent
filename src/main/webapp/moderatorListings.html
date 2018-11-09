@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Moderator</title>
-    <script src="scripts/jquery.min.js"></script>
-    <script src="scripts/lodash.min.js"></script>
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/lodash.min.js"></script>
 
     <script type="text/javascript">
 
@@ -38,9 +38,11 @@
 
         function getListings() {
             var token = localStorage.getItem("token");
+            console.log("Sent token:");
+            console.log(token);
 
             $.ajax({
-                url : 'nurent/moderator/getPendingListings',
+                url : 'listings/getPendingListings',
                 dataType: 'json',
                 method : 'GET',
                 headers: {
@@ -65,7 +67,7 @@
             var id = listings[index].id;
             var token = localStorage.getItem("token");
             $.ajax({
-                url: "moderatpr/listings/approve?" + $.param({"id": id}),
+                url: "listings/approve?" + $.param({"id": id}),
                 method: 'POST',
                 headers: {
                     "Authorization": "Bearer " + token
@@ -93,7 +95,7 @@
             }
 
             $.ajax({
-                url: "moderatpr/listings/disapprove?" + $.param({"id": id, "comment": comment}),
+                url: "listings/refuse?" + $.param({"id": id, "comment": comment}),
                 method: 'POST',
                 headers: {
                     "Authorization": "Bearer " + token

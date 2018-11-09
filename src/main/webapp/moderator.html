@@ -38,8 +38,10 @@
                         }
                     },
                     success : function (r) {
+                        console.log("Recieved token:");
+                        console.log(r);
                         putLoginToken(r);
-                        window.location.replace("/moderator/listings");
+                        window.location.replace("moderator/listings");
                     },
                     data: JSON.stringify(credentials)
                 });
@@ -67,7 +69,7 @@
 <body>
 
 <div>
-    <h1>Log In</h1>
+    <h1>Moderator Log In</h1>
 
     <fieldset>
         <div id="loginIncorrect"></div>
