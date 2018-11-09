@@ -1,77 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>NUrent</title>
-<script src="scripts/jquery.min.js"></script>
-<script src="scripts/lodash.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>NU Rent</title>
 
 
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/lodash.min.js"></script>
+    <link href="scripts/bootstrap.min.css" rel="stylesheet" />
+
+
+
+    <style>
+        * {box-sizing: border-box;}
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+
+
+       .card {
+           box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+           transition: 0.3s;
+           width: 75%;
+       }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+        .selector-for-some-widget {
+            box-sizing: content-box;
+        }
+        .column{
+            float: left;
+            width:50%;
+            padding:10px;
+        }
+
+        .row{
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            width: auto;
+            height: auto;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #3e8e41;
+        }
+
+        #myInput {
+            border-box: box-sizing;
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {outline: 3px solid #ddd;}
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f6f6f6;
+            min-width: 230px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            z-index: 1;
+            width: auto;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd;}
+
+        .show {display: block;}
+    </style>
 
 
     <script type="text/javascript">
 
         var listings = [];
 
-    function checkIfLoggedIn() {
-          var token = localStorage.getItem("token");
-          if (token != null) {
-              $('#header').empty();
-              $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + "Go to your profile" + "</button></a>");
-          }
-      }
-
-    function getListings() {
-        var e = document.getElementById("buttonid");
-        var city = e.innerHTML;
-        var minprice = document.getElementById("minprice").value;
-        var maxprice = document.getElementById("maxprice").value;
-        var min_number_of_rooms = document.getElementById("minrooms").value;
-        var max_number_of_rooms = document.getElementById("maxrooms").value;
-
-        console.log(city);
-        $.ajax({
-           url : 'nurent/listings',
-            dataType: 'json',
-            method : 'GET',
-            data: {
-                "city": city,
-                "minprice" : minprice,
-                "maxprice" : maxprice,
-                "min_number_of_rooms" : min_number_of_rooms,
-                "max_number_of_rooms" : max_number_of_rooms
-            },
-            success : function(r) {
-                listings = r;
-                updateList();
-
+        function checkIfLoggedIn() {
+            var token = localStorage.getItem("token");
+            if (token != null) {
+                $('#header').empty();
+                $('#header').append("<a id='userWelcome' href='nurent/profile' style='text-decoration: none;'><button id='profileButton'>profile: " + "Go to your profile" + "</button></a>");
             }
-        });
-    }
+        }
 
-    function updateList() {
-        $("#listings-list").empty();
+        function getListings() {
+            var e = document.getElementById("buttonid");
+            var city = e.innerHTML;
+            var minprice = document.getElementById("minprice").value;
+            var maxprice = document.getElementById("maxprice").value;
+            var min_number_of_rooms = document.getElementById("minrooms").value;
+            var max_number_of_rooms = document.getElementById("maxrooms").value;
 
+            console.log(city);
+            $.ajax({
+                url : 'nurent/listings',
+                dataType: 'json',
+                method : 'GET',
+                data: {
+                    "city": city,
+                    "minprice" : minprice,
+                    "maxprice" : maxprice,
+                    "min_number_of_rooms" : min_number_of_rooms,
+                    "max_number_of_rooms" : max_number_of_rooms
+                },
+                success : function(r) {
+                    listings = r;
+                    updateList();
+
+                }
+            });
+        }
+
+        function updateList() {
+            $("#listings-list").empty();
 
             for (var i in listings) {
 
                 console.log(listings[i].title);
-                $("#listings-list").append("<li>" + "<fieldset>"+ listings[i].title + ", Price: " + listings[i].price + ", Rooms: "+ listings[i].num_of_rooms +", City: " + listings[i].city + ", Adress: " + listings[i].building +" , Postdate: " + listings[i].postdate + ", Description: " + listings[i].description);
+                $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://s.hswstatic.com/gif/buying-house1.jpg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><td></tr></table></div></div></div>");
 
-                $("#listings-list").append("</fieldset></li>");
 
             }
 
 
+        }
 
-    }
 
+        $(document).ready(function () {
+            checkIfLoggedIn();
+            getListings();
 
-    $(document).ready(function () {
-        checkIfLoggedIn();
-        getListings();
-
-    });
+        });
 
     </script>
 
@@ -84,6 +184,7 @@
             line-height: 44px;
             margin: 0 0 12px;
             text-align: center;
+
         }
 
         #header {
@@ -131,126 +232,107 @@
 
 
     </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .dropbtn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 16px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-        }
 
-        .dropbtn:hover, .dropbtn:focus {
-            background-color: #3e8e41;
-        }
-
-        #myInput {
-            border-box: box-sizing;
-            background-position: 14px 12px;
-            background-repeat: no-repeat;
-            font-size: 16px;
-            padding: 14px 20px 12px 45px;
-            border: none;
-            border-bottom: 1px solid #ddd;
-        }
-
-        #myInput:focus {outline: 3px solid #ddd;}
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f6f6f6;
-            min-width: 230px;
-            overflow: auto;
-            border: 1px solid #ddd;
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown a:hover {background-color: #ddd;}
-
-        .show {display: block;}
-    </style>
 
 </head>
 <body>
-    <div id="header">
-        <a href="nurent/login" style="text-decoration:none;" ><button id="loginButton">log in / sign up</button></a>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">NU Rent</a>
+    <div class="collapse navbar-collapse" id="navbarsExample03">
+        <ul class="navbar-nav mr-auto"></ul>
+        <form class="form-inline my-2 my-md-0">
+            <a class="btn btn-outline-primary" href="login.html">log in / sign up</button></a>        </form>
     </div>
+</nav>
 
-    <h1>Nu Rent</h1>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <br class="nav-item active">
+                    <br class="nav-link" > <strong>  Price:</strong>
+                    <br>Minimum<input id="minprice" type="text" size="15"></br> </br>Maximum <input id="maxprice" type="text" size="15"><span class="sr-only">(current)</span></br></a>
 
-    <div class="dropdown">
-        <button id ="buttonid" onclick="myFunction()" class="dropbtn">City</button>
-        <div id="myDropdown" class="dropdown-content">
-            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-            <a href="#astana" id="City" onclick="display(id)">City</a>
-            <a href="#astana" id="Astana" onclick="display(id)">Astana</a>
-            <a href="#almaty" id="Almaty" onclick="display(id)">Almaty</a>
-            <a href="#aktobe" id="Aktobe" onclick="display(id)">Aktobe</a>
-            <a href="#shymkent" id="Shymkent" onclick="display(id)">Shymkent</a>
-            <a href="#atyrau" id="Atyrau" onclick="display(id)">Atyrau</a>
-            <a href="#kostanay" id="Kostanay" onclick="display(id)">Kostanay</a>
-            <a href="#karaganda" id="Karaganda" onclick="display(id)">Karaganda</a>
+                    <li class="nav-item active">
+                        <br class="nav-link"><strong>Number of rooms:</strong>
+                        <br><input id="minrooms" type="text" size="7"> - <input id="maxrooms" type="text" size="7"></br></a>
+                    </li>
+                    <p></p>
+                    <div class="dropdown">
+                        <button id ="buttonid" onclick="myFunction()" class="dropbtn">City</button>
+                        <div id="myDropdown" class="dropdown-content">
+                            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                            <a href="#astana" id="City" onclick="display(id)">City</a>
+                            <a href="#astana" id="Astana" onclick="display(id)">Astana</a>
+                            <a href="#almaty" id="Almaty" onclick="display(id)">Almaty</a>
+                            <a href="#aktobe" id="Aktobe" onclick="display(id)">Aktobe</a>
+                            <a href="#shymkent" id="Shymkent" onclick="display(id)">Shymkent</a>
+                            <a href="#atyrau" id="Atyrau" onclick="display(id)">Atyrau</a>
+                            <a href="#kostanay" id="Kostanay" onclick="display(id)">Kostanay</a>
+                            <a href="#karaganda" id="Karaganda" onclick="display(id)">Karaganda</a>
 
-        </div>
+                        </div>
 
-        Price:
-        <input id="minprice" type="text" size="15"> - <input id="maxprice" type="text" size="15">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="submit-button" onclick="getListings()">Search</button>
+                </ul>
+            </div>
+        </nav>
 
-        Number of rooms:
-        <input id="minrooms" type="text" size="7"> - <input id="maxrooms" type="text" size="7">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4"><div style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h2 class="h2">Listings</h2>
+            </div>
+            <div id="listings">
+                <ul id="listings-list"> </ul>>
+            </div>
+        </main>
 
-        <button id="submit_button" type="button" onclick="getListings()">Submit</button>
+
 
     </div>
+</div>
 
-    <script>
-        /* When the user clicks on the button,
-        toggle between hiding and showing the dropdown content */
-        function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
 
-        function display(id){
-            document.getElementById("buttonid").innerHTML=id;
-            var e = document.getElementById("buttonid");
-            var strUser = e.innerHTML;
-            console.log(strUser);
-        }
 
-        function filterFunction() {
-            var input, filter, ul, li, a, i;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            div = document.getElementById("myDropdown");
-            a = div.getElementsByTagName("a");
-            for (i = 0; i < a.length; i++) {
-                if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    a[i].style.display = "";
-                } else {
-                    a[i].style.display = "none";
-                }
+
+
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function display(id){
+        document.getElementById("buttonid").innerHTML=id;
+        var e = document.getElementById("buttonid");
+        var strUser = e.innerHTML;
+        console.log(strUser);
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
             }
         }
-    </script>
+    }
 
-    <div id="listings">
-        <ul id="listings-list"> </ul>>
-    </div>
+
+</script>
+
+
+
+
 
 </body>
 </html>

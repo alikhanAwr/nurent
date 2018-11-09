@@ -11,12 +11,12 @@
             localStorage.removeItem("token");
             window.location.replace("/");
         }
-        // function checkIfLoggedIn() {
-        //     var token = localStorage.getItem("token");
-        //     if (token == null) {
-        //         window.location.replace("/nurent/login")
-        //     }
-        // }
+        function checkIfLoggedIn() {
+            var token = localStorage.getItem("token");
+            if (token == null) {
+                window.location.replace("/nurent/login")
+            }
+        }
         function sendLogout() {
             var token = localStorage.getItem("token");
             $.ajax({
