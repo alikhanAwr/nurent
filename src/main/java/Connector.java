@@ -2,7 +2,7 @@
 
 import java.sql.*;
 import com.mysql.jdbc.Driver;
-class connector{
+class Connector {
 
     public Connection getConnection(){
             Connection conn = null;

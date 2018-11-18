@@ -61,11 +61,11 @@
             for (var i in listings) {
                 console.log(listings[i].id);
                 var comment;
-                // if(listings[i].comment == null){
-                //     comment = "no comment";
-                // }else{
-                //     comment = listings[i].comment;
-                // }
+                if(listings[i].comment == null){
+                    comment = "no comment";
+                }else{
+                    comment = listings[i].comment;
+                }
                 if(listings[i].status === "visible") {
                     $("#listings-list").append("<li class='approved-listing'>" + listings[i].title + ", Price: " + listings[i].price
                         + ", City: " + listings[i].city
