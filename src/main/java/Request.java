@@ -682,6 +682,7 @@ class Request {
                         ps.setString(3, "Hide Listing");
                         ps.setString(4, "Success");
                         ps.setString(5, username1);
+                        ps.executeUpdate();
                     }
                 }
             }

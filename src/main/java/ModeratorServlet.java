@@ -1,5 +1,7 @@
-import com.google.gson.Gson;
+import com.google.gson.*;
+import netscape.javascript.JSObject;
 
+import javax.json.Json;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -8,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.awt.image.RescaleOp;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("/moderator")
@@ -17,6 +20,8 @@ public class ModeratorServlet {
     private ServletContext context;
 
     private Request request = new Request();
+
+
 
     @GET
     @Produces({MediaType.TEXT_HTML})
@@ -108,6 +113,186 @@ public class ModeratorServlet {
         String token = header.substring("Bearer".length()).trim();
         return request.checkTokenForModerator(token);
     }
+
+
+    @GET
+    @Path("logs")
+    @Produces({MediaType.TEXT_HTML})
+    public InputStream getLogsPage() {
+        return context.getResourceAsStream("logs.html");
+    }
+
+    @GET
+    @Path("logs/request")
+    public Response getLogs(@Context HttpHeaders headers, @QueryParam("username") String username,
+                        @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
+                        @QueryParam("logins") boolean logins, @QueryParam("listings") boolean listings, @QueryParam("id") String id,
+                        @QueryParam("move") String move) {
+
+
+//        System.out.println(username);
+//        System.out.println(startDate);
+//        System.out.println(endDate);
+//        System.out.println(logins);
+//        System.out.println(listings);
+
+
+
+        //TODO: check whether the supplied parameters are of corretct type (id is int, logins, listings are boolean, and so on)
+        int idInt = 0;
+        if (id != null) {
+            try {
+                idInt = Integer.parseInt(id);
+            } catch (Exception e) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        }
+
+
+        List<LogRec> logs = new LinkedList<>();
+        List<LogRec> toSend;
+        int L = 25;
+        String jsonToSend;
+
+        //Retrieve the logs
+        for (int i = 34; i < 100; i++) {
+            logs.add(new LogRec(i, "1234", "alikhan", "Log in", "success", "add info"));
+        }
+
+
+        if (move == null || id == null) {
+
+            int size = logs.size();
+            if (size > L) {
+                toSend = logs.subList(0, L);
+                jsonToSend = getJsonToSend(toSend, false, true);
+            } else {
+                toSend = logs.subList(0, size);
+                jsonToSend = getJsonToSend(toSend, false, false);
+            }
+
+        } else if (move.equals("up")){
+            int index;
+            boolean found = false;
+            int size = logs.size();
+
+            boolean up;
+            boolean down;
+
+            for (index = 0; index < size; index++) {
+                if (logs.get(index).getId() == idInt) {
+                    found = true;
+                    break;
+                } else if (logs.get(index).getId() < idInt ) {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+            }
+
+            if (found) {
+
+                if (index < L) {
+
+                    down = size - L > 0;
+
+                    if (size > L) {
+                        toSend = logs.subList(0, L);
+                    } else {
+                        toSend = logs.subList(0, size);
+                    }
+
+                    jsonToSend = getJsonToSend(toSend, false, down);
+
+                } else {
+
+                    int start_index = index - L;
+                    toSend = logs.subList(start_index, index);
+
+                    up = index - L > 0;
+                    down = index - 1 < size;
+
+                    jsonToSend = getJsonToSend(toSend, up, down);
+
+                }
+
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+        } else if (move.equals("down")) {
+            int index;
+            boolean found = false;
+            int size = logs.size();
+
+            boolean up;
+            boolean down;
+
+            for (index = 0; index < size; index++) {
+                if (logs.get(index).getId() == idInt) {
+                    found = true;
+                    break;
+                } else if (logs.get(index).getId() < idInt ) {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+            }
+
+            if (found) {
+
+                if (size - index - 1 < L) {
+
+                    up = true;
+                    down = false;
+
+                    toSend = logs.subList(index + 1, size);
+                    jsonToSend = getJsonToSend(toSend, true, down);
+
+                } else {
+                    up = true;
+                    down = false;
+
+                    down = size - (L + index + 1) > 0;
+                    toSend = logs.subList(index + 1, index + 1 + L);
+                    jsonToSend = getJsonToSend(toSend, up, down);
+
+                }
+
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        return Response.ok(jsonToSend).build();
+
+//        if(authenticate(headers)) {
+//            boolean byUsername = (username != null);
+//            List<LogRec> logs = request.getLogsByParameter(getToken(headers), false, "", true, true, true);
+//            System.out.println(logs);
+//            return Response.ok().build();
+//        } else {
+//            return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+
+    }
+
+    private String getJsonToSend(List<LogRec> logs, boolean up, boolean down) {
+
+        Gson gson = new Gson();
+        String json = gson.toJson(logs);
+
+        JsonParser jsonParser = new JsonParser();
+        JsonArray jsonArray = (JsonArray) jsonParser.parse(json);
+
+        JsonObject result = new JsonObject();
+        result.add("logs", jsonArray);
+        result.addProperty("up", up);
+        result.addProperty("down", down);
+
+        json = gson.toJson(result);
+        return json;
+    }
+
 
     @GET
     @Path("logout")
