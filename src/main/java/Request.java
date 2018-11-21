@@ -222,7 +222,7 @@ class Request {
                     "VALUES(?,?,?,?,?);";
             ps = conn.prepareStatement(psquery3);
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, generateHash(password));
             ps.setString(3, name);
             ps.setString(4, surname);
             ps.setString(5, phone);
@@ -269,7 +269,7 @@ class Request {
                     "VALUES(?,?);";
             ps = conn.prepareStatement(psquery2);
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, generateHash(password));
             ps.executeUpdate();
             ps = conn.prepareStatement(LogStatement);
             ps.setString(1, getTime());
@@ -643,6 +643,7 @@ class Request {
     }
 
     public void hideListing(String id, String token) {
+        System.out.println("1");
         Connector connector = new Connector();
         Connection conn = connector.getConnection();
         ResultSet rs = null;
@@ -669,6 +670,7 @@ class Request {
                 String psquery3 = "SELECT status FROM Listings WHERE id = ?;";
                 ps = conn.prepareStatement(psquery3);
                 ps.setString(1, id);
+                rs = ps.executeQuery();
                 if (rs.next()) {
                     String status = rs.getString("status");
                     if (status.equals("visible")) {
@@ -722,9 +724,10 @@ class Request {
                 String psquery3 = "SELECT status FROM Listings WHERE id = ?;";
                 ps = conn.prepareStatement(psquery3);
                 ps.setString(1, id);
+                rs = ps.executeQuery();
                 if (rs.next()) {
                     String status = rs.getString("status");
-                    if (status.equals("visible")) {
+                    if (status.equals("hidden")) {
                         String psquery4 = "UPDATE Listings SET status = 'visible' WHERE id = ?;";
                         ps = conn.prepareStatement(psquery4);
                         ps.setString(1, id);
@@ -1215,7 +1218,7 @@ class Request {
     }
 
     public List<LogRec> getLogsByParameter(String token, boolean user, String username,
-                                           boolean logins, boolean listings, boolean all) {
+                                           boolean logins, boolean listings) {
         LinkedList<LogRec> toReturn = new LinkedList<>();
         Connector connector = new Connector();
         Connection conn = connector.getConnection();
@@ -1228,7 +1231,7 @@ class Request {
             ps.setString(1, token);
             rs = ps.executeQuery();
             if (rs.next()) {
-                if (user || logins || listings || all) {
+                if (user || logins || listings) {
                     String psquery2 = "SELECT * FROM bitlab.Logs WHERE";
                     boolean or = false;
                     if (user) {
@@ -1253,12 +1256,6 @@ class Request {
                                 "activity = 'Delete Listing (Moderator)' OR activity = 'Approve Listing (Moderator)' " +
                                 "OR activity = 'disapprove Listing (Moderator)')";
                         or = true;
-                    }
-                    if (all) {
-                        if (or) {
-                            psquery2 += " OR";
-                        }
-                        psquery2 += " 1 = 1";
                     }
                     psquery2 += ";";
                     ps = conn.prepareStatement(psquery2);
