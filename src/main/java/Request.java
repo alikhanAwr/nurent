@@ -1263,6 +1263,7 @@ class Request {
                     if (user) {
                         ps.setString(1, username);
                     }
+                    System.out.println(psquery2);
                     rs = ps.executeQuery();
                     while (rs.next()) {
                         LogRec log = new LogRec(rs.getInt("id"),
