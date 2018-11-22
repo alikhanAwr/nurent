@@ -1257,6 +1257,7 @@ class Request {
                                 "OR activity = 'disapprove Listing (Moderator)')";
                         or = true;
                     }
+                    psquery2 += "ORDER BY id DESC";
                     psquery2 += ";";
                     ps = conn.prepareStatement(psquery2);
                     if (user) {

@@ -186,8 +186,6 @@ public class ModeratorServlet {
 
         //Retrieve the logs
         logs = request.getLogsByParameter(getToken(headers), userBool, username, logins, listings);
-        System.out.println(logs);
-
         if (move == null || id == null) {
 
             int size = logs.size();
@@ -247,6 +245,7 @@ public class ModeratorServlet {
             }
 
         } else if (move.equals("down")) {
+            System.out.println(move);
             int index;
             boolean found = false;
             int size = logs.size();

@@ -170,18 +170,56 @@
 
         function getPreviousLogs() {
 
-            $.ajax({
+            var token = localStorage.getItem("token");
 
-            })
+            var data = getQuerryParams();
+            data["move"] = "up";
+            data["id"] = logs[0]["id"];
+
+            $.ajax({
+                url : 'request',
+                dataType: 'json',
+                method : 'GET',
+                data: data,
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success : function(r) {
+                    updateTable(r);
+
+                }
+            });
 
 
         }
 
         function getNextLogs() {
 
+            var token = localStorage.getItem("token");
+
+            var data = getQuerryParams();
+            data["move"] = "down";
+            data["id"] = logs[logs.length - 1]["id"];
+
+            console.log(data);
+
+            $.ajax({
+                url : 'request',
+                dataType: 'json',
+                method : 'GET',
+                data: data,
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success : function(r) {
+                    updateTable(r);
+                }
+            });
         }
 
         function updateTable(json) {
+            console.log(json);
+
             if (json["up"] === true) {
                 $("#prev-button").show();
             } else {
