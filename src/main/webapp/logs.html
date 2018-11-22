@@ -17,8 +17,7 @@
         var listings = null;
         var startDate = null;
         var endDate = null;
-        var firstId = null;
-        var lastId = null;
+
 
         var logs = null;
 
@@ -97,6 +96,8 @@
 
         function submitRequest() {
 
+            var token = localStorage.getItem("token");
+
             var loginsCheckbox = $("#logins-checkbox")[0];
             var listingsCheckbox = $("#listings-checkbox")[0];
             var usernameCheckbox = $("#username-checkbox")[0];
@@ -105,22 +106,52 @@
 
 
             if (loginsCheckbox.checked === false && listingsCheckbox.checked === false) {
+                //TODO: alert with error
                 return;
             }
+
+            // Fill the variables
+
+            if (usernameCheckbox.checked === true) {
+                username = usernameField.val();
+            } else {
+                username = null;
+            }
+
+            startDate = $("#from-datepicker").val();
+            endDate = $("#to-datepicker").val();
+
+            logins = loginsCheckbox.checked;
+            listings = listingsCheckbox.checked;
 
             //TODO: exceptions regards to the username value
 
 
+            var data = getQuerryParams();
+
+            $.ajax({
+                url : 'request',
+                dataType: 'json',
+                method : 'GET',
+                data: data,
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success : function(r) {
+                    updateTable(r);
+
+                }
+            });
+        }
+
+        function getQuerryParams() {
+
             var data = {};
 
-            if (usernameCheckbox.checked === true) {
-                username = usernameField.val();
+
+            if (username != null) {
                 data["username"] = username;
             }
-
-            //Start and end dates
-            startDate = $("#from-datepicker").val();
-            endDate = $("#to-datepicker").val();
 
             if (startDate !== "") {
                 data["startDate"] = startDate;
@@ -130,29 +161,19 @@
                 data["endDate"] = endDate;
             }
 
-            if (loginsCheckbox.checked === true) {
-                logins = "true";
-                data["logins"] = logins;
-            }
+            data["logins"] = logins;
+            data["listings"] = listings;
 
-            if (listingsCheckbox.checked === true) {
-                listings = "true";
-                data["listings"] = listings;
-            }
+            return data;
 
-            $.ajax({
-                url : 'request',
-                dataType: 'json',
-                method : 'GET',
-                data: data,
-                success : function(r) {
-                    updateTable(r);
-
-                }
-            });
         }
 
         function getPreviousLogs() {
+
+            $.ajax({
+
+            })
+
 
         }
 

@@ -1265,7 +1265,7 @@ class Request {
                     rs = ps.executeQuery();
                     while (rs.next()) {
                         LogRec log = new LogRec(rs.getInt("id"),
-                                rs.getString("data_time"),
+                                rs.getString("date_time"),
                                 rs.getString("username"),
                                 rs.getString("activity"),
                                 rs.getString("result"),

@@ -137,7 +137,35 @@ public class ModeratorServlet {
 //        System.out.println(listings);
 
 
+        if(authenticate(headers)) {
+            return getLogsResponse(headers, id, username, move, startDate, endDate, logins, listings);
 
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+    }
+
+    private String getJsonToSend(List<LogRec> logs, boolean up, boolean down) {
+
+        Gson gson = new Gson();
+        String json = gson.toJson(logs);
+
+        JsonParser jsonParser = new JsonParser();
+        JsonArray jsonArray = (JsonArray) jsonParser.parse(json);
+
+        JsonObject result = new JsonObject();
+        result.add("logs", jsonArray);
+        result.addProperty("up", up);
+        result.addProperty("down", down);
+
+        json = gson.toJson(result);
+        return json;
+    }
+
+
+    private Response getLogsResponse(HttpHeaders headers, String id, String username, String move, String startDate,
+                                     String endDate, boolean logins, boolean listings) {
         //TODO: check whether the supplied parameters are of corretct type (id is int, logins, listings are boolean, and so on)
         int idInt = 0;
         if (id != null) {
@@ -148,17 +176,17 @@ public class ModeratorServlet {
             }
         }
 
+        boolean userBool = (username != null);
 
-        List<LogRec> logs = new LinkedList<>();
+
+        List<LogRec> logs;
         List<LogRec> toSend;
         int L = 25;
         String jsonToSend;
 
         //Retrieve the logs
-        for (int i = 34; i < 100; i++) {
-            logs.add(new LogRec(i, "1234", "alikhan", "Log in", "success", "add info"));
-        }
-
+        logs = request.getLogsByParameter(getToken(headers), userBool, username, logins, listings);
+        System.out.println(logs);
 
         if (move == null || id == null) {
 
@@ -264,35 +292,7 @@ public class ModeratorServlet {
         }
 
         return Response.ok(jsonToSend).build();
-
-//        if(authenticate(headers)) {
-//            boolean byUsername = (username != null);
-//            List<LogRec> logs = request.getLogsByParameter(getToken(headers), false, "", true, true, true);
-//            System.out.println(logs);
-//            return Response.ok().build();
-//        } else {
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
-
     }
-
-    private String getJsonToSend(List<LogRec> logs, boolean up, boolean down) {
-
-        Gson gson = new Gson();
-        String json = gson.toJson(logs);
-
-        JsonParser jsonParser = new JsonParser();
-        JsonArray jsonArray = (JsonArray) jsonParser.parse(json);
-
-        JsonObject result = new JsonObject();
-        result.add("logs", jsonArray);
-        result.addProperty("up", up);
-        result.addProperty("down", down);
-
-        json = gson.toJson(result);
-        return json;
-    }
-
 
     @GET
     @Path("logout")
