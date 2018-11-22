@@ -1273,7 +1273,7 @@ class Request {
                     if(user){
                         psquery2 += ") ";
                     }
-                    psquery2 += " ORDER BY id";
+                    psquery2 += " ORDER BY id DESC";
                     psquery2 += ";";
                     ps = conn.prepareStatement(psquery2);
                     if (user) {
