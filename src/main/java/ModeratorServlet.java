@@ -12,6 +12,7 @@ import java.awt.image.RescaleOp;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Path("/moderator")
 public class ModeratorServlet {
@@ -178,6 +179,19 @@ public class ModeratorServlet {
 
         boolean userBool = (username != null);
 
+        if (startDate != null) {
+            startDate = parseDate(startDate, 0);
+        }
+
+        if (endDate != null) {
+            endDate = parseDate(endDate, 1);
+        }
+
+        System.out.println(startDate);
+        System.out.println(endDate);
+
+
+
 
         List<LogRec> logs;
         List<LogRec> toSend;
@@ -291,6 +305,17 @@ public class ModeratorServlet {
         }
 
         return Response.ok(jsonToSend).build();
+    }
+
+    private String parseDate(String date, int i) {
+
+        String[] dates = date.split(Pattern.quote("/"));
+
+        if (i == 0) {
+            return dates[2] + "." + dates[1] + "." + dates[0] + "-00.00.00";
+        } else {
+            return dates[2] + "." + dates[1] + "." + dates[0] + "-23.59.59";
+        }
     }
 
     @GET
