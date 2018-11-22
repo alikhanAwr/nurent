@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -6,10 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 @Path("/profile")
 public class ProfileServlet {
@@ -133,10 +131,12 @@ public class ProfileServlet {
         }
 
         String token = auth.get(0).substring("Bearer".length()).trim();
-
+        System.out.println(1);
+        System.out.println(listing.getImage());
+        System.out.println(NumberUtils.toLong(listing.getImage()));
         if (request.checkToken(token)) {
             request.addListing(listing.getTitle(), listing.getCity(), listing.getBuilding(), listing.getNum_of_rooms(),
-                    listing.getDescription(), listing.getPrice(), listing.getContact_info(), token);
+                    listing.getDescription(), listing.getPrice(), listing.getContact_info(), listing.getImage(), token);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();

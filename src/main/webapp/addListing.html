@@ -5,8 +5,16 @@
     <title>Add a listings</title>
     <script src="/scripts/jquery.min.js"></script>
     <script src="/scripts/lodash.min.js"></script>
-
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
     <script type="text/javascript">
+        cloudinary.applyUploadWidget('#upload_widget_opener',{
+            cloudName: 'dy0fmbqvd', uploadPreset: 'bndcdpof',
+            cropping: true, folder: 'widgetdocs' ,
+            multiple: false});
+    </script>
+    <script type="text/javascript">
+        // n - name of image
+        var n = "";
         function buildInput() {
             for(var i=1; i<=24; i++){
                 console.log(i);
@@ -31,6 +39,7 @@
             var description = $("textarea[name=description]").val();
             var price = $("input[name=price]").val();
             var contact_info = $("input[name=number]").val();
+            var image = n;
 
 
 
@@ -48,7 +57,8 @@
                 num_of_rooms: number_of_rooms,
                 description: description,
                 price: price,
-                contact_info: contact_info
+                contact_info: contact_info,
+                image: image
             };
 
 
@@ -99,6 +109,7 @@
 
         }
         $(document).ready(function () {
+
             var token = localStorage.getItem("token");
             if (!token) {
                 window.location.replace("/");
@@ -106,6 +117,18 @@
             buildInput();
             $("#submit-button").on('click', function () {
                 sendListing();
+            });
+            $("#upload-button").on('click', function () {
+                var d = new Date();
+                n1 = d.getTime();
+                n = Number(n1);
+                var widget = cloudinary.createUploadWidget({ cloudName: "dy0fmbqvd", multiple: false , maxFiles: 1,
+                     uploadPreset: "bndcdpof", public_id: n , croppingAspectRatio: 1.0,
+                    cropping: true, croppingCoordinatesMode: "custom"});
+                console.log(d);
+                widget.multiple = false;
+                widget.open();
+
             });
 
         })
@@ -140,12 +163,18 @@
         Contact number:<br>
         <input type="text" name="number"><br>
         <input type="button" value="Submit" id="submit-button">
+        <input type="button" value="Upload Image" id="upload-button">
+
     </form>
 
 
 
 
 
+
     <button id="cancel-button">Cancel</button>
+
+
 </body>
 </html>
+
