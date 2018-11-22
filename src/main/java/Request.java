@@ -16,36 +16,7 @@ class Request {
     private static final String LogStatement = "INSERT INTO Logs(date_time, username, activity, result, additional_info)" +
             "VALUES(?,?,?,?,?);";
 
-//    //only for minimal-viable demonstration
-//    @Deprecated
-//    public Pair<Boolean, String> addNewUser_name_and_password_only(String name, String password) {
-//        Connector connector = new Connector();
-//        String toReturn;
-//        Pair<Boolean, String> ret = null;
-//        try {
-//
-//            String query1 = "SELECT * FROM Accounts WHERE username = \"" + name + "\";";
-//            Connection conn = connector.getConnection();
-//            Statement st = conn.createStatement();
-//            ResultSet rs = st.executeQuery(query1);
-//            if (rs.next()) {
-//                System.out.println("User with such name already exists");
-//                toReturn = "User with such name already exists";
-//                ret = new Pair<>(false, toReturn);
-//            } else {
-//                query1 = "INSERT INTO Accounts(username, password) " +
-//                        "VALUES(\"" + name + "\",\"" + generateHash(password) + "\");";
-//                st.executeUpdate(query1);
-//                System.out.println("NewUser Added Successfully");
-//                toReturn = "NewUser Added Successfully";
-//                ret = new Pair<>(true, toReturn);
-//            }
-//        } catch (Exception ex) {
-//            System.out.println("Exception in addNewUser: " + ex.getMessage());
-//        } finally {
-//            return ret;
-//        }
-//    }
+
 
     public String generateToken(String username) {
         String uuid = UUID.randomUUID().toString();
@@ -156,6 +127,7 @@ class Request {
             ps.setString(3, "Log Out");
             ps.setString(4, "Success");
             ps.setString(5, username);
+            ps.executeUpdate();
         } catch (Exception ex) {
             System.out.println("Exception in deleteToken(): " + ex.getMessage());
         } finally {
@@ -1235,7 +1207,7 @@ class Request {
     }
 
     public List<LogRec> getLogsByParameter(String token, boolean user, String username,
-                                           boolean logins, boolean listings) {
+                                           boolean logins, boolean listings, String startDate , String endDate) {
         LinkedList<LogRec> toReturn = new LinkedList<>();
         Connector connector = new Connector();
         Connection conn = connector.getConnection();
@@ -1252,10 +1224,16 @@ class Request {
                     String psquery2 = "SELECT * FROM bitlab.Logs WHERE";
                     boolean or = false;
                     if (user) {
-                        psquery2 += " username = ? AND (";
+                        psquery2 += " username = ? AND ";
+                    }
+                    if(startDate != null){
+                        psquery2 += " date_time >= ? AND ";
+                    }
+                    if(endDate != null){
+                        psquery2 += " date_time <= ? AND ";
                     }
                     if (logins) {
-                        psquery2 += " (activity = 'Log In' OR activity = 'Log Out' " +
+                        psquery2 += "( (activity = 'Log In' OR activity = 'Log Out' " +
                                 "OR activity = 'Registration' OR activity = 'Log In(Moderator)' " +
                                 "OR activity = 'Log Out(Moderator)' OR activity = 'Add Moderator')";
                         or = true;
@@ -1270,15 +1248,26 @@ class Request {
                                 "OR activity = 'disapprove Listing (Moderator)')";
                         or = true;
                     }
-                    if(user){
-                        psquery2 += ") ";
-                    }
-                    psquery2 += " ORDER BY id DESC";
+                    psquery2 += ") ORDER BY id DESC";
                     psquery2 += ";";
                     ps = conn.prepareStatement(psquery2);
                     if (user) {
                         ps.setString(1, username);
                     }
+                    if(!user && startDate != null){
+                        ps.setString(1, startDate);
+                    }
+                    else if(user && startDate != null) {
+                        ps.setString(2, startDate);
+                    }
+                    if (!user && startDate == null && endDate != null){
+                        ps.setString(1,endDate);
+                    } else if (((user && startDate == null) || (!user && startDate != null)) && endDate != null){
+                        ps.setString(2,endDate);
+                    } else if (user && startDate != null && endDate != null){
+                        ps.setString(3,endDate);
+                    }
+
                     rs = ps.executeQuery();
                     while (rs.next()) {
                         LogRec log = new LogRec(rs.getInt("id"),

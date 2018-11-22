@@ -200,7 +200,7 @@ public class ModeratorServlet {
         String jsonToSend;
 
         //Retrieve the logs
-        logs = request.getLogsByParameter(getToken(headers), userBool, username, logins, listings);
+        logs = request.getLogsByParameter(getToken(headers), userBool, username, logins, listings, startDate, endDate);
         if (move == null || id == null) {
 
             int size = logs.size();
