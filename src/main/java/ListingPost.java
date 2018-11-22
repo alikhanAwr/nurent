@@ -59,12 +59,21 @@ public class ListingPost implements Serializable {
         this.contact_info = contact_info;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     private String city;
     private String building;
     private String num_of_rooms;
     private String description;
     private String price;
     private String contact_info;
+    private String image;
 
 
 }

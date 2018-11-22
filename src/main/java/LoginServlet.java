@@ -42,7 +42,6 @@ public class LoginServlet {
         String password = credentials.getPassword();
 
         try {
-
             request.checkNameAndPassword(username, password);
 
             String token = request.generateToken(username);

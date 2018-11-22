@@ -295,7 +295,7 @@ class Request {
         }
     }
 
-    public void addListing(String title, String city, String building, String num_of_rooms, String description, String price, String contact_info, String token) {
+    public void addListing(String title, String city, String building, String num_of_rooms, String description, String price, String contact_info,  String image, String token) {
         Connector connector = new Connector();
         Connection conn = connector.getConnection();
         ResultSet rs = null;
@@ -309,8 +309,8 @@ class Request {
             if (rs.next()) {
                 username = rs.getString("username");
                 String psquery2 = "INSERT INTO bitlab.Listings" +
-                        "(username, title, city, building, num_of_rooms, description, price, contact_info , postdate , status) " +
-                        "VALUES(?,?,?,?,?,?,?,?,?,?);";
+                        "(username, title, city, building, num_of_rooms, description, price, contact_info , postdate , status, image) " +
+                        "VALUES(?,?,?,?,?,?,?,?,?,?,?);";
                 ps = conn.prepareStatement(psquery2);
                 ps.setString(1, username);
                 ps.setString(2, title);
@@ -322,6 +322,7 @@ class Request {
                 ps.setString(8, contact_info);
                 ps.setString(9, getTime());
                 ps.setString(10, "under moderation");
+                ps.setString(11, image);
                 ps.executeUpdate();
                 ps = conn.prepareStatement(LogStatement);
                 ps.setString(1, getTime());
@@ -366,6 +367,9 @@ class Request {
                 throw new Exception("Invalid username");
             }
             String pass = rs.getString("password");
+            System.out.println(pass);
+            System.out.println(password);
+            System.out.println(generateHash(password));
             if (!pass.equals(generateHash(password))) {
                 throw new Exception("Invalid password");
             }
@@ -509,7 +513,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             return list;
@@ -555,7 +561,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             ps = conn.prepareStatement(LogStatement);
@@ -926,7 +934,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             ps = conn.prepareStatement(LogStatement);
@@ -975,7 +985,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             ps = conn.prepareStatement(LogStatement);
@@ -1025,7 +1037,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             ps = conn.prepareStatement(LogStatement);
@@ -1075,7 +1089,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             ps = conn.prepareStatement(LogStatement);
@@ -1125,7 +1141,9 @@ class Request {
                         rs.getString("postdate"),
                         rs.getString("contact_info"),
                         rs.getString("status"),
-                        rs.getString("comment"));
+                        rs.getString("comment"),
+                        rs.getString("image")
+                );
                 list.addLast(listing);
             }
             ps = conn.prepareStatement(LogStatement);
@@ -1234,13 +1252,9 @@ class Request {
                     String psquery2 = "SELECT * FROM bitlab.Logs WHERE";
                     boolean or = false;
                     if (user) {
-                        or = true;
-                        psquery2 += " username = ?";
+                        psquery2 += " username = ? AND (";
                     }
                     if (logins) {
-                        if (or) {
-                            psquery2 += " OR";
-                        }
                         psquery2 += " (activity = 'Log In' OR activity = 'Log Out' " +
                                 "OR activity = 'Registration' OR activity = 'Log In(Moderator)' " +
                                 "OR activity = 'Log Out(Moderator)' OR activity = 'Add Moderator')";
@@ -1256,6 +1270,10 @@ class Request {
                                 "OR activity = 'disapprove Listing (Moderator)')";
                         or = true;
                     }
+                    if(user){
+                        psquery2 += ") ";
+                    }
+                    psquery2 += " ORDER BY id";
                     psquery2 += ";";
                     ps = conn.prepareStatement(psquery2);
                     if (user) {
@@ -1264,7 +1282,7 @@ class Request {
                     rs = ps.executeQuery();
                     while (rs.next()) {
                         LogRec log = new LogRec(rs.getInt("id"),
-                                rs.getString("data_time"),
+                                rs.getString("date_time"),
                                 rs.getString("username"),
                                 rs.getString("activity"),
                                 rs.getString("result"),

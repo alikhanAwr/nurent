@@ -158,8 +158,16 @@
             for (var i in listings) {
 
                 console.log(listings[i].title);
-                $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://s.hswstatic.com/gif/buying-house1.jpg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><td></tr></table></div></div></div>");
-
+                if(listings[i].image != null) {
+                    var im = 'https://res.cloudinary.com/dy0fmbqvd/image/upload/' + listings[i].image;
+                }
+                console.log(im);
+                $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><td></tr></table></div></div></div>");
+                var x = document.getElementsByTagName("img").item(i);
+                if(listings[i].image != null) {
+                    x.setAttribute("src", im);
+                }
+                x.setAttribute("style", "width:200px;height:200px;")
 
             }
 
@@ -272,9 +280,7 @@
                             <a href="#atyrau" id="Atyrau" onclick="display(id)">Atyrau</a>
                             <a href="#kostanay" id="Kostanay" onclick="display(id)">Kostanay</a>
                             <a href="#karaganda" id="Karaganda" onclick="display(id)">Karaganda</a>
-
                         </div>
-
                         <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="submit-button" onclick="getListings()">Search</button>
                     </div>
                 </ul>
