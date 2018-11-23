@@ -1267,6 +1267,8 @@ class Request {
                     } else if (user && startDate != null && endDate != null){
                         ps.setString(3,endDate);
                     }
+                    //IF YOU SEE ERRORS IT IS OK! prepared statements are not smart enough
+                    // to understand that everything is totally ok
 
                     rs = ps.executeQuery();
                     while (rs.next()) {

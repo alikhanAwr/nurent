@@ -92,6 +92,7 @@
             border: none;
             border-bottom: 1px solid #ddd;
         }
+
         #myInput:focus {outline: 3px solid #ddd;}
 
         .dropdown-content a {
@@ -158,14 +159,14 @@
                 }
                 console.log(im);
 //                 $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><td></tr></table></div></div></div>");
-                $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><p>Description:"+listings[i].description+"</p><p>Contact information:"+listings[i].contact_info+"</p><td></tr></table></div></div></div>");
+                $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><p>Address:"+listings[i].building+"</p><p>Description:"+listings[i].description+"</p><p>Contact information:"+listings[i].contact_info+"</p><td></tr></table></div></div></div>");
 
                 
                 var x = document.getElementsByTagName("img").item(i);
                 if(listings[i].image != null) {
                     x.setAttribute("src", im);
                 }
-                x.setAttribute("style", "width:200px;height:200px;")
+                x.setAttribute("style", "width:250px;height:250px;")
 
             }
 
@@ -280,7 +281,7 @@
 
 
     <!-- Listings grid -->
-    <div class="w3-row w3-grayscale">
+    <div class="w3-row">
         <div class="align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h2>Listings</h2>
         </div>
@@ -340,7 +341,7 @@
     </script>
 
 
-
+</div>
 
 </body>
 </html>

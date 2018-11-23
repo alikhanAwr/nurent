@@ -117,10 +117,18 @@
 
 
             for (var i in listings) {
+                if(listings[i].image != null) {
+                    var im = 'https://res.cloudinary.com/dy0fmbqvd/image/upload/' + listings[i].image;
+                }
                 $("#listings-list").append("<li class='listing'>" + listings[i].title + ", Price: " + listings[i].price
                     + ", City: " + listings[i].city
                     + ", Building: " + listings[i].building + ", Postdate: " + listings[i].postdate + ", Description: " + listings[i].description + ", Status: " + listings[i].status
-                    + "<button class='approve' type='button'>approve</button>" + "<button class='disapprove' type='button'>disapprove</button>" + "</li>");
+                    + "<img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'><button class='approve' type='button'>approve</button>" + "<button class='disapprove' type='button'>disapprove</button>" + "</li>");
+                var x = document.getElementsByTagName("img").item(i);
+                if(listings[i].image != null) {
+                    x.setAttribute("src", im);
+                }
+                x.setAttribute("style", "width:200px;height:200px;")
             }
         }
 
@@ -148,7 +156,7 @@
     </script>
 </head>
 <body>
-<a href="/nurent/moderator/logs">Logs</a>
+<a href="/nurent/moderator/logs/">Logs</a>
 <h1>Pending listings</h1>
 
 <div id="listings">
