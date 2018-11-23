@@ -3,72 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>NU Rent</title>
-
-
     <script src="scripts/jquery.min.js"></script>
     <script src="scripts/lodash.min.js"></script>
-    <link href="scripts/bootstrap.min.css" rel="stylesheet" />
 
 
 
-    <style>
+
+     <style>
+        ul.topnav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        ul.topnav li {float: left;}
+
+        ul.topnav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        ul.topnav li a:hover:not(.active) {background-color: #111;}
+
+        ul.topnav li a.active {background-color: #4CAF50;}
+
+        ul.topnav li.right {float: right;}
+
+        @media screen and (max-width: 600px){
+            ul.topnav li.right,
+            ul.topnav li {float: none;}
+        }
+        .w3-sidebar a {font-family: "Roboto", sans-serif}
+        body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
+
         * {box-sizing: border-box;}
-
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
         }
-
-
-
-
-
-       .card {
-           box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-           transition: 0.3s;
-           width: 100%;
-       }
-
+        .background{
+            background: #36383F;
+            color: white;
+        }
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 100%;
+        }
         .card:hover {
             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
         }
-
         .container {
             padding: 2px 16px;
         }
         .selector-for-some-widget {
             box-sizing: content-box;
         }
+        .line {
+            border-right-color: black; /* Цвет линии справа */
+            border-right-style: solid; /* Стиль линии */
+            border-right-width: 5px;  /* Толщина линии */
+            padding-right: 20px;  /* Расстояние между линией и текстом */
+            margin-right: 100px; /* Отступ справа */
+        }
         .column{
             float: left;
             width:100%;
             padding:10px;
-        }
-
-        .row{
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-
-        .dropbtn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 16px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            width: auto;
-            height: auto;
-        }
-
-        .dropbtn:hover, .dropbtn:focus {
-            background-color: #3e8e41;
         }
 
         #myInput {
@@ -80,24 +92,7 @@
             border: none;
             border-bottom: 1px solid #ddd;
         }
-
         #myInput:focus {outline: 3px solid #ddd;}
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f6f6f6;
-            min-width: 230px;
-            overflow: auto;
-            border: 1px solid #ddd;
-            z-index: 1;
-            width: auto;
-        }
 
         .dropdown-content a {
             color: black;
@@ -105,8 +100,8 @@
             text-decoration: none;
             display: block;
         }
-
         .dropdown a:hover {background-color: #ddd;}
+
 
         .show {display: block;}
     </style>
@@ -162,7 +157,10 @@
                     var im = 'https://res.cloudinary.com/dy0fmbqvd/image/upload/' + listings[i].image;
                 }
                 console.log(im);
+//                 $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><td></tr></table></div></div></div>");
                 $("#listings-list").append("<div class='column'><div class='card'><div class='container'><h4><b><table><tr><td><img src='https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'></td>"+"<td><p>Title:"+listings[i].title+"</p></b></h4><p>Price:"+listings[i].price+"</p><p>Number of rooms:"+listings[i].num_of_rooms+"</p><p>City:"+listings[i].city+"</p><td></tr></table></div></div></div>");
+
+                
                 var x = document.getElementsByTagName("img").item(i);
                 if(listings[i].image != null) {
                     x.setAttribute("src", im);
@@ -243,100 +241,103 @@
 
 
 </head>
-<body>
 
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">NU Rent</a>
-    <div class="collapse navbar-collapse" id="navbarsExample03">
-        <ul class="navbar-nav mr-auto"></ul>
-        <div id="header">
-            <a href="nurent/login">log in / sign up</button></a>        </div>
+
+<body class="w3-content" style="max-width:1920px" >
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block background w3-collapse w3-top line" style="z-index:3;width:320px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+        <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+        <h3 class="w3-wide"><b>NU Rent</b></h3>
     </div>
+    <br class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+    <h4 class="w3-bar-item w3-padding"><b>Price:</b></h4>
+    <h5 class="w3-bar-item w3-padding"><br>Minimum<input id="minprice" type="text" size="15" style="border-radius: 3px"></br></h5> <h5 class="w3-bar-item w3-padding"><br>Maximum <input id="maxprice" type="text" size="15" style="border-radius: 3px"><span class="sr-only ">(current)</span></br></a></h5>
+    <h4 class="w3-bar-item w3-padding"><b>Number of rooms:</b></h4>
+    <h5 class="w3-bar-item w3-padding"><br><input id="minrooms" type="text" size="7" style="border-radius: 3px"> - <input id="maxrooms" type="text" size="7" style="border-radius: 3px"></br></a></h5>
+    <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-left-align" id="buttonid">City</a>
+    <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium" >
+        <a href="#astana" id="City" onclick="display(id)" class="w3-bar-item w3-button">All</a>
+        <a href="#astana" id="Astana" onclick="display(id)" class="w3-bar-item w3-button">Astana</a>
+        <a href="#almaty" id="Almaty" onclick="display(id)" class="w3-bar-item w3-button">Almaty</a>
+        <a href="#aktobe" id="Aktobe" onclick="display(id)" class="w3-bar-item w3-button">Aktobe</a>
+        <a href="#shymkent" id="Shymkent" onclick="display(id)" class="w3-bar-item w3-button">Shymkent</a>
+        <a href="#atyrau" id="Atyrau" onclick="display(id)" class="w3-bar-item w3-button">Atyrau</a>
+        <a href="#kostanay" id="Kostanay" onclick="display(id)" class="w3-bar-item w3-button">Kostanay</a>
+        <a href="#karaganda" id="Karaganda" onclick="display(id)" class="w3-bar-item w3-button">Karaganda</a>        </div>
+    <button class="btn-outline-success my-2 my-sm-0 w3-bar-item w3-button w3-padding text-center" style="background-color: limegreen; color: white; border-radius: 5px; margin-left: 5px" type="button" id="submit-button" onclick="getListings()"><strong>Search</strong></button>
 </nav>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <br class="nav-item active">
-                    <br class="nav-link" > <strong>  Price:</strong>
-                    <br>Minimum<input id="minprice" type="text" size="15"></br> </br>Maximum <input id="maxprice" type="text" size="15"><span class="sr-only">(current)</span></br></a>
-
-                    <li class="nav-item active">
-                        <br class="nav-link"><strong>Number of rooms:</strong>
-                        <br><input id="minrooms" type="text" size="7"> - <input id="maxrooms" type="text" size="7"></br></a>
-                    </li>
-                    <p></p>
-                    <div class="dropdown">
-                        <button id ="buttonid" onclick="myFunction()" class="dropbtn">City</button>
-                        <div id="myDropdown" class="dropdown-content">
-                            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                            <a href="#astana" id="City" onclick="display(id)">City</a>
-                            <a href="#astana" id="Astana" onclick="display(id)">Astana</a>
-                            <a href="#almaty" id="Almaty" onclick="display(id)">Almaty</a>
-                            <a href="#aktobe" id="Aktobe" onclick="display(id)">Aktobe</a>
-                            <a href="#shymkent" id="Shymkent" onclick="display(id)">Shymkent</a>
-                            <a href="#atyrau" id="Atyrau" onclick="display(id)">Atyrau</a>
-                            <a href="#kostanay" id="Kostanay" onclick="display(id)">Kostanay</a>
-                            <a href="#karaganda" id="Karaganda" onclick="display(id)">Karaganda</a>
-                        </div>
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="submit-button" onclick="getListings()">Search</button>
-                    </div>
-                </ul>
-            </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4"><div style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h2 class="h2">Listings</h2>
-            </div>
-            <div id="listings">
-                <ul id="listings-list"> </ul>
-            </div>
-        </main>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:320px">
 
 
+    <!-- Top header -->
+    <ul class="topnav" style="background-color: #0f0f0f">
+        <li class="right" id="header"><a href="nurent/login"> log in / sign up</a></li>
+    </ul>
 
+
+    <!-- Listings grid -->
+    <div class="w3-row w3-grayscale">
+        <div class="align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h2>Listings</h2>
+        </div>
+        <div id="listings">
+            <ul  id="listings-list"> </ul>
+        </div>
     </div>
-</div>
-
-
-
-
-
-<script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    function display(id){
-        document.getElementById("buttonid").innerHTML=id;
-        var e = document.getElementById("buttonid");
-        var strUser = e.innerHTML;
-        console.log(strUser);
-    }
-
-    function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
+ <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+        function display(id){
+            document.getElementById("buttonid").innerHTML=id;
+            var e = document.getElementById("buttonid");
+            var strUser = e.innerHTML;
+            console.log(strUser);
+        }
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+                if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                } else {
+                    a[i].style.display = "none";
+                }
             }
         }
-    }
+
+        // Accordion
+        function myAccFunc() {
+            var x = document.getElementById("demoAcc");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
 
 
-</script>
 
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+    </script>
 
 
 

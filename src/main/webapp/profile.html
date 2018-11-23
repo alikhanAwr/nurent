@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script src="/scripts/jquery.min.js"></script>
     <script src="/scripts/lodash.min.js"></script>
     <script type="text/javascript">
@@ -174,7 +179,14 @@
             });
         })
     </script>
+        </script>
     <style>
+        .column{
+            float: left;
+            width:100%;
+            padding:10px;
+        }
+
         .approved-listing {
             color: #0ed314;
         }
@@ -190,16 +202,46 @@
         .disapproved-listing {
             color: #d32f58;
         }
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 100%;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+        .container {
+            padding: 2px 16px;
+            background: rgba(0, 0, 0, 0.19);
+            margin-bottom: 20px;
+        }
+        body,h1,h2,h3,h4,h5,h6, {font-family: "Montserrat", sans-serif;}
+
+        body {
+            background: #0a0a0a; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, rgba(67, 69, 75, 0.6), #5e5e5e);
+            background: -moz-linear-gradient(right, rgba(71, 71, 75, 0.61), #6b726b);
+            background: -o-linear-gradient(right, rgba(72, 75, 70, 0.6), #6b6868);
+            background: linear-gradient(to left, rgba(42, 61, 75, 0.61), #636363);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
     </style>
 </head>
 <body>
+<header class="w3-container w3-black">
+    <p class="w3-left"></p>
+    <p class="w3-right">
+        <i><a href="/">Go back</a></i>
+        <i><a href="/nurent/profile/create">Create a Listing</a></i>
+        <i><button id="logout" ONCLICK="sendLogout()">Logout</button></i>
+    </p>
+</header>
 
-<a href="/">Go back</a>
-<a href="/nurent/profile/create">Create a Listing</a>
-<button id="logout" ONCLICK="sendLogout()">logout</button>
 
 <div id="listings">
-    <ul id="listings-list"></ul>>
+        <h5><ul><div id="listings-list"></div></ul></h5>
 </div>
 
 </body>

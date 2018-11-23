@@ -37,6 +37,7 @@ public class ListingsServlet {
                                         @QueryParam("max_number_of_rooms") String max_num_of_rooms
                                         ) {
 
+
         System.out.println(city);
         System.out.println(minprice);
         System.out.println(maxprice);
@@ -62,7 +63,7 @@ public class ListingsServlet {
         List<Listing> listings = request.getListingsByParameters(city, minprice, maxprice, min_num_of_rooms, max_num_of_rooms, sort_by, order_by);
         Gson gson = new Gson();
         String json = gson.toJson(listings);
-        return Response.ok(json).build();//123
+        return Response.ok(json).build();
     }
 
 }
