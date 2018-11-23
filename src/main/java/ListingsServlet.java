@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,6 +62,7 @@ public class ListingsServlet {
         String sort_by = null;
         String order_by = null;
         List<Listing> listings = request.getListingsByParameters(city, minprice, maxprice, min_num_of_rooms, max_num_of_rooms, sort_by, order_by);
+
         Gson gson = new Gson();
         String json = gson.toJson(listings);
         return Response.ok(json).build();
