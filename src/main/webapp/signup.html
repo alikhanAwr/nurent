@@ -76,15 +76,14 @@
 
                 console.log(JSON.stringify(account));
 
+
                 $.ajax({
                     url : 'signup',
                     contentType : 'application/json',
-                    dataType: 'json',
                     method : 'POST',
                     statusCode : {
                         400: function (r) {
-                            var message = r.responseJSON.message;
-                            console.log(r);
+                            var message = r.responseText;
                             $('#incorrectSignup').empty();
                             $('#incorrectSignup').append("<p>"+ message + "</p>");
                         }

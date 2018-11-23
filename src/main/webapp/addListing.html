@@ -119,6 +119,7 @@
                 sendListing();
             });
             $("#upload-button").on('click', function () {
+                console.log("test");
                 var d = new Date();
                 n1 = d.getTime();
                 n = Number(n1);
@@ -131,8 +132,13 @@
 
             });
 
+
+
         })
 
+        function cancelFunction() {
+            window.location.replace("/nurent/profile");
+        }
 
 
 
@@ -246,7 +252,7 @@
             <input type="text" name="number"><br>
             <button type="button" value="Submit" id="submit-button" style="margin-bottom: 20px">Submit</button>
             <input type="button" value="Upload Image" id="upload-button">
-            <button id="cancel-button" style="background-color: #636363">Cancel</button>
+            <button id="cancel-button" style="background-color: #636363" onclick="cancelFunction()">Cancel</button>
         </form>
     </div>
 

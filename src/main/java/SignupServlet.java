@@ -26,7 +26,6 @@ public class SignupServlet {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response signUp(AccountSignup account) {
         String username = account.getUsername();
         String password = account.getPassword();
@@ -34,6 +33,8 @@ public class SignupServlet {
         String firstName = account.getName();
         String lastName = account.getSurname();
         String phone = account.getPhone();
+
+
 
         //TODO: Validate the given sign up inforamtion
         try {
